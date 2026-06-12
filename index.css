@@ -2182,6 +2182,16 @@ textarea:focus {
   margin-top: 16px;
 }
 
+.made-with-love {
+  position: relative;
+  z-index: 2;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #38bdf8;
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+
 .footer-right h3 {
   font-size: 1rem;
   font-weight: 800;
