@@ -10,6 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Stylesheet -->
   <link rel="stylesheet" href="index.css">
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="images/Tuna9.jpg">
 </head>
 <body>
 
@@ -22,7 +24,7 @@
         <!-- ロゴ (二匹の魚の実画像) -->
         <a href="#/home" class="logo-area">
           <div class="logo-icon">
-            <img src="images/Vinit.jpg" alt="つなともロゴ" class="logo-img" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-primary-light);">
+            <img src="images/Tuna9.jpg" alt="つなともロゴ" class="logo-img" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-primary-light);">
           </div>
           <div class="logo-text">
             <span class="logo-title">つなとも</span>
@@ -32,13 +34,20 @@
 
         <!-- デスクトップ用ナビゲーション -->
         <nav class="desktop-nav">
-          <a href="#/home" class="nav-link active" data-page="home">ホーム</a>
-          <a href="#/matching" class="nav-link" data-page="matching">サポーターを探す</a>
-          <a href="#/booking" class="nav-link" data-page="booking">支援同行予約</a>
-          <a href="#/events" class="nav-link" data-page="events">地域交流</a>
-          <a href="#/board" class="nav-link" data-page="board">相談掲示板</a>
-          <a href="#/info" class="nav-link" data-page="info">お役立ち情報</a>
+          <a href="#/home" class="nav-link active" data-page="home" data-t="nav-home">ホーム</a>
+          <a href="#/matching" class="nav-link" data-page="matching" data-t="nav-matching">サポーターを探す</a>
+          <a href="#/booking" class="nav-link" data-page="booking" data-t="nav-booking">支援同行予約</a>
+          <a href="#/events" class="nav-link" data-page="events" data-t="nav-events">地域交流</a>
+          <a href="#/board" class="nav-link" data-page="board" data-t="nav-board">相談掲示板</a>
+          <a href="#/info" class="nav-link" data-page="info" data-t="nav-info">お役立ち情報</a>
+          <a href="#/chat" class="nav-link" data-page="chat" id="nav-chat" style="display:none;" data-t="nav-chat">チャット</a>
+          <a href="#/admin" class="nav-link" data-page="admin" id="nav-admin" style="display:none;" data-t="nav-admin">管理画面</a>
         </nav>
+
+        <!-- 翻訳ボタン (日本語/English Toggle) -->
+        <div class="lang-selector">
+          <button class="btn btn-outline btn-sm lang-toggle-btn" id="lang-toggle-btn" style="min-width: 80px;">English</button>
+        </div>
 
         <!-- ユーザープロフィール・ステータスエリア -->
         <div class="user-status-area" id="header-user-status">
@@ -56,12 +65,17 @@
 
       <!-- モバイル用ナビゲーションドロワー -->
       <nav class="mobile-nav" id="mobile-nav">
-        <a href="#/home" class="mobile-nav-link" data-page="home">ホーム</a>
-        <a href="#/matching" class="mobile-nav-link" data-page="matching">サポーターを探す</a>
-        <a href="#/booking" class="mobile-nav-link" data-page="booking">支援同行予約</a>
-        <a href="#/events" class="mobile-nav-link" data-page="events">地域交流</a>
-        <a href="#/board" class="mobile-nav-link" data-page="board">相談掲示板</a>
-        <a href="#/info" class="mobile-nav-link" data-page="info">お役立ち情報</a>
+        <div class="mobile-lang-selector" style="padding: 10px 16px; border-bottom: 1px solid var(--color-border);">
+          <button class="btn btn-outline btn-block btn-sm lang-toggle-btn" id="mobile-lang-toggle-btn">English</button>
+        </div>
+        <a href="#/home" class="mobile-nav-link" data-page="home" data-t="nav-home">ホーム</a>
+        <a href="#/matching" class="mobile-nav-link" data-page="matching" data-t="nav-matching">サポーターを探す</a>
+        <a href="#/booking" class="mobile-nav-link" data-page="booking" data-t="nav-booking">支援同行予約</a>
+        <a href="#/events" class="mobile-nav-link" data-page="events" data-t="nav-events">地域交流</a>
+        <a href="#/board" class="mobile-nav-link" data-page="board" data-t="nav-board">相談掲示板</a>
+        <a href="#/info" class="mobile-nav-link" data-page="info" data-t="nav-info">お役立ち情報</a>
+        <a href="#/chat" class="mobile-nav-link" data-page="chat" id="mobile-nav-chat" style="display:none;" data-t="nav-chat">チャット</a>
+        <a href="#/admin" class="mobile-nav-link" data-page="admin" id="mobile-nav-admin" style="display:none;" data-t="nav-admin">管理画面</a>
         <div class="mobile-nav-user" id="mobile-nav-user">
           <!-- JSで動的にユーザー用ショートカットを挿入 -->
         </div>
@@ -83,13 +97,17 @@
           </video>
           <div class="hero-overlay"></div>
           <div class="slide-content">
-            <span class="hero-badge">多文化共生プラットフォーム</span>
-            <h1 class="hero-title">日本での新しい生活を、仲間と共に。</h1>
-            <p class="hero-description">「つなとも」は、日本に住む国際学生と、日本人学生や地域住民がつながり、支え合うためのマッチング・コミュニティサービスです。</p>
+            <span class="hero-badge" data-t="hero-badge">多文化共生プラットフォーム</span>
+            <h1 class="hero-title" data-t="hero-title">日本での新しい生活を、仲間と共に。</h1>
+            <p class="hero-description" data-t="hero-description">「つなとも」は、日本に住む国際学生と、日本人学生や地域住民がつながり、支え合うためのマッチング・コミュニティサービスです。</p>
             <div class="hero-actions">
-              <a href="#/matching" class="btn btn-light btn-lg">サポーターを探す</a>
-              <a href="#/booking" class="btn btn-primary btn-lg">同行サポートを予約</a>
+              <a href="#/matching" class="btn btn-light btn-lg" data-t="hero-find-btn">サポーターを探す</a>
+              <a href="#/booking" class="btn btn-primary btn-lg" data-t="hero-book-btn">同行サポートを予約</a>
             </div>
+          </div>
+          <div class="scroll-indicator" id="scroll-indicator">
+            <span class="scroll-text">Scroll Down</span>
+            <div class="scroll-arrow"></div>
           </div>
         </div>
 
@@ -101,8 +119,8 @@
                 <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               </div>
               <div class="quick-card-body">
-                <h3>同行予約</h3>
-                <p>役所手続きや口座開設などの同行サポートを予約できます。</p>
+                <h3 data-t="quick-booking-title">同行予約</h3>
+                <p data-t="quick-booking-desc">役所手続きや口座開設などの同行サポートを予約できます。</p>
               </div>
             </a>
             <a href="#/board" class="quick-card card-board">
@@ -110,8 +128,8 @@
                 <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               </div>
               <div class="quick-card-body">
-                <h3>相談掲示板</h3>
-                <p>日々の困りごとや質問を投稿して、みんなに相談できます。</p>
+                <h3 data-t="quick-board-title">相談掲示板</h3>
+                <p data-t="quick-board-desc">日々の困りごとや質問を投稿して、みんなに相談できます。</p>
               </div>
             </a>
             <a href="#/events" class="quick-card card-events">
@@ -119,8 +137,8 @@
                 <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               </div>
               <div class="quick-card-body">
-                <h3>地域交流</h3>
-                <p>交流イベントに参加して、他の学生や地域住民と仲良くなろう！</p>
+                <h3 data-t="quick-events-title">地域交流</h3>
+                <p data-t="quick-events-desc">交流イベントに参加して、他の学生や地域住民と仲良くなろう！</p>
               </div>
             </a>
             <a href="#/info" class="quick-card card-info">
@@ -128,8 +146,8 @@
                 <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
               </div>
               <div class="quick-card-body">
-                <h3>お役立ち情報</h3>
-                <p>役所手続き、SIM契約、国民健康保険など各種ガイドを提供。</p>
+                <h3 data-t="quick-info-title">お役立ち情報</h3>
+                <p data-t="quick-info-desc">役所手続き、SIM契約、国民健康保険など各種ガイドを提供。</p>
               </div>
             </a>
           </div>
@@ -138,11 +156,11 @@
           <div class="home-fish-banner card glass-card" id="home-fish-banner-container">
             <!-- JSで動的に表示内容を変更（ログイン時のみ魚を表示） -->
             <div class="fish-banner-left">
-              <div class="section-title-badge">魚育成 & コスチューム</div>
-              <h2>活動してあなたの「お魚」を成長させよう！</h2>
-              <p>サポートへの参加、イベントの出席、相談への回答など、サイト内での活動でポイントを獲得できます。ポイントを集めると、可愛い帽子やアクセサリーなどのコスチュームを解放できます！</p>
+              <div class="section-title-badge" data-t="fish-banner-badge">魚育成 & コスチューム</div>
+              <h2 data-t="fish-banner-title">活動してあなたの「お魚」を成長させよう！</h2>
+              <p data-t="fish-banner-desc">サポートへの参加、イベントの出席、相談への回答など、サイト内での活動でポイントを獲得できます。ポイントを集めると、可愛い帽子やアクセサリーなどのコスチュームを解放できます！</p>
               <div class="btn-group">
-                <a href="#/game" class="btn btn-primary">マイフィッシュを見る</a>
+                <a href="#/game" class="btn btn-primary" data-t="fish-banner-btn">マイフィッシュを見る</a>
               </div>
             </div>
             <div class="fish-banner-right">
@@ -166,7 +184,7 @@
           <div class="home-grid">
             <div class="home-column-main">
               <div class="section-header">
-                <h2>最新のお知らせ</h2>
+                <h2 data-t="home-announcements-title">最新のお知らせ</h2>
               </div>
               <div class="announcements-list" id="home-announcements">
                 <!-- JSで動的に表示 -->
@@ -175,8 +193,8 @@
             
             <div class="home-column-side">
               <div class="section-header">
-                <h2>おすすめイベント</h2>
-                <a href="#/events" class="link-more">すべて見る →</a>
+                <h2 data-t="home-events-title">おすすめイベント</h2>
+                <a href="#/events" class="link-more" data-t="home-events-more">すべて見る →</a>
               </div>
               <div class="events-side-list" id="home-events-side">
                 <!-- JSで動的に表示 -->
@@ -187,18 +205,18 @@
           <!-- 公式LINEアピールセクション -->
           <div class="line-promo-section card">
             <div class="line-promo-content">
-              <span class="line-tag">公式LINEで相談</span>
-              <h2>困ったときは、いつでもLINEで気軽にご相談ください！</h2>
-              <p>つなとも事務局とサポートスタッフが、生活の些細な質問や急な困りごとにLINEでお答えします。下のQRコードを読み取るか、URLから友だち追加してください。</p>
-              <a href="https://line.me/R/ti/p/mock" target="_blank" rel="noopener noreferrer" class="btn btn-line btn-lg">
+              <span class="line-tag" data-t="line-promo-tag">公式LINEで相談</span>
+              <h2 data-t="line-promo-title">困ったときは、いつでもLINEで気軽にご相談ください！</h2>
+              <p data-t="line-promo-desc">つなとも事務局とサポートスタッフが、生活の些細な質問や急な困りごとにLINEでお答えします。下のQRコードを読み取るか、URLから友だち追加してください。</p>
+              <a href="https://line.me/R/ti/p/mock" target="_blank" rel="noopener noreferrer" class="btn btn-line btn-lg" data-t="line-promo-btn">
                 <span class="btn-icon">💬</span> LINE友だち追加はこちら
               </a>
             </div>
             <div class="line-promo-qr">
               <div class="qr-box">
                 <!-- 実物のLINE QRコード画像 -->
-                <img src="images/Vinit3.jpg" alt="つなとも公式LINE QRコード" style="width: 120px; height: 120px; object-fit: contain; border-radius: 8px;">
-                <span>つなとも公式LINE</span>
+                <img src="images/Tuna3.jpg" alt="つなとも公式LINE QRコード" style="width: 120px; height: 120px; object-fit: contain; border-radius: 8px;">
+                <span data-t="line-promo-qr-label">つなとも公式LINE</span>
               </div>
             </div>
           </div>
@@ -251,24 +269,49 @@
               <label for="signup-password">パスワード</label>
               <input type="password" id="signup-password" required placeholder="6文字以上">
             </div>
+            <div class="form-group" id="signup-college-group">
+              <label for="signup-college">学部・カレッジ (College)</label>
+              <select id="signup-college">
+                <option value="APS">APS (Asia Pacific Studies)</option>
+                <option value="APM">APM (Asia Pacific Management)</option>
+                <option value="ST">ST (Sustainability Tourism)</option>
+                <option value="Other">その他 (Other)</option>
+              </select>
+            </div>
+            <div class="form-group" id="signup-semester-group">
+              <label for="signup-semester">学期・セメスター (Semester)</label>
+              <select id="signup-semester">
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+                <option value="04">04</option>
+                <option value="05">05</option>
+                <option value="06">06</option>
+                <option value="07">07</option>
+                <option value="08">08</option>
+                <option value="08+">08+</option>
+                <option value="Pass out">Pass out (Graduated)</option>
+                <option value="Coming semester">Coming semester (Pre-entry)</option>
+              </select>
+            </div>
             <div class="form-group">
               <label>初期プロフィール画像選択</label>
               <div class="avatar-presets">
                 <label class="avatar-preset-label">
-                  <input type="radio" name="signup-avatar" value="images/Vinit.jpg" checked>
-                  <img src="images/Vinit.jpg" alt="Preset 1">
+                  <input type="radio" name="signup-avatar" value="images/Tuna1.jpg" checked>
+                  <img src="images/Tuna1.jpg" alt="Preset 1">
                 </label>
                 <label class="avatar-preset-label">
-                  <input type="radio" name="signup-avatar" value="images/Vinit2.jpg">
-                  <img src="images/Vinit2.jpg" alt="Preset 2">
+                  <input type="radio" name="signup-avatar" value="images/Tuna2.jpg">
+                  <img src="images/Tuna2.jpg" alt="Preset 2">
                 </label>
                 <label class="avatar-preset-label">
-                  <input type="radio" name="signup-avatar" value="images/Vinit3.jpg">
-                  <img src="images/Vinit3.jpg" alt="Preset 3">
+                  <input type="radio" name="signup-avatar" value="images/Tuna3.jpg">
+                  <img src="images/Tuna3.jpg" alt="Preset 3">
                 </label>
                 <label class="avatar-preset-label">
-                  <input type="radio" name="signup-avatar" value="images/Vinit4.jpg">
-                  <img src="images/Vinit4.jpg" alt="Preset 4">
+                  <input type="radio" name="signup-avatar" value="images/Tuna4.jpg">
+                  <img src="images/Tuna4.jpg" alt="Preset 4">
                 </label>
               </div>
             </div>
@@ -285,7 +328,7 @@
           <div class="profile-header card glass-card">
             <div class="profile-header-top">
               <div class="profile-avatar-wrapper">
-                <img id="profile-display-avatar" src="images/Vinit.jpg" alt="プロフィール写真" class="profile-avatar-img">
+                <img id="profile-display-avatar" src="images/Tuna1.jpg" alt="プロフィール写真" class="profile-avatar-img">
               </div>
               <div class="profile-meta-top">
                 <span id="profile-display-badge" class="badge">日本人学生</span>
@@ -316,13 +359,67 @@
               <form id="profile-edit-form" class="profile-edit-form-style">
                 <!-- 共通項目 -->
                 <div class="form-group">
-                  <label for="edit-name">名前（ニックネーム可）</label>
+                  <label for="edit-name">名前（ニックネーム可）/ Name</label>
                   <input type="text" id="edit-name" required>
                 </div>
-                
+
                 <div class="form-group">
-                  <label for="edit-university">大学・学部名</label>
-                  <input type="text" id="edit-university" placeholder="例: ○○大学 国際関係学部">
+                  <label>プロフィール写真 / Profile Photo</label>
+                  <div class="avatar-presets">
+                    <label class="avatar-preset-label">
+                      <input type="radio" name="edit-avatar" value="images/Tuna1.jpg">
+                      <img src="images/Tuna1.jpg" alt="Photo 1">
+                    </label>
+                    <label class="avatar-preset-label">
+                      <input type="radio" name="edit-avatar" value="images/Tuna2.jpg">
+                      <img src="images/Tuna2.jpg" alt="Photo 2">
+                    </label>
+                    <label class="avatar-preset-label">
+                      <input type="radio" name="edit-avatar" value="images/Tuna3.jpg">
+                      <img src="images/Tuna3.jpg" alt="Photo 3">
+                    </label>
+                    <label class="avatar-preset-label">
+                      <input type="radio" name="edit-avatar" value="images/Tuna4.jpg">
+                      <img src="images/Tuna4.jpg" alt="Photo 4">
+                    </label>
+                    <label class="avatar-preset-label">
+                      <input type="radio" name="edit-avatar" value="images/Tuna9.jpg">
+                      <img src="images/Tuna9.jpg" alt="Photo 5">
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group" id="edit-college-group">
+                  <label for="edit-college">カレッジ / College</label>
+                  <select id="edit-college">
+                    <option value="">選択してください / Select</option>
+                    <option value="APS">APS (Asia Pacific Studies)</option>
+                    <option value="APM">APM (Asia Pacific Management)</option>
+                    <option value="ST">ST (Sustainability Tourism)</option>
+                    <option value="Other">その他 / Other</option>
+                  </select>
+                </div>
+
+                <div class="form-group" id="edit-semester-group">
+                  <label for="edit-semester">セメスター / Semester</label>
+                  <select id="edit-semester">
+                    <option value="">選択してください / Select</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
+                    <option value="Pass out">Pass out (Graduated)</option>
+                    <option value="Coming">Coming semester (Pre-entry)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-university">大学・学部名 / University</label>
+                  <input type="text" id="edit-university" placeholder="Ritsumeikan Asia Pacific University (APU)">
                 </div>
 
                 <div class="form-group">
@@ -610,10 +707,10 @@
             <!-- 各項目の中身はJSでロードするか、HTML直書きして切り替え -->
             <!-- 初期表示: 市役所手続き -->
             <div class="info-tab-content active" id="info-city-hall">
-              <div class="info-header-img" style="background-image: linear-gradient(rgba(13, 110, 253, 0.2), rgba(13, 110, 253, 0.8)), url('images/Vinit2.jpg');">
+              <div class="info-header-img" style="background-image: linear-gradient(rgba(13, 110, 253, 0.2), rgba(13, 110, 253, 0.8)), url('images/Tuna2.jpg');">
                 <h1>市役所手続き</h1>
               </div>
-              <div class="info-body">
+              <div class="info-body lang-ja">
                 <h2>住民登録（転入届）</h2>
                 <p>日本に到着し、住む場所が決まったら<strong>14日以内</strong>に役所（区役所や市役所）に行き、住所を登録する必要があります。</p>
                 
@@ -636,6 +733,29 @@
                   <strong>💡 アドバイス:</strong> 日本語での記入や案内が難しい場合は、「つなとも」の同行予約でサポーターに同行を依頼することをお勧めします！
                 </blockquote>
               </div>
+              <div class="info-body lang-en">
+                <h2>Resident Registration (Moving-in Notice)</h2>
+                <p>Once you arrive in Japan and have a place to stay, you must go to your local city or ward office within <strong>14 days</strong> to register your address.</p>
+                
+                <div class="info-step-box">
+                  <h3>Required Items</h3>
+                  <ul>
+                    <li><strong>Residence Card</strong> (issued at the airport)</li>
+                    <li><strong>Passport</strong></li>
+                    <li><strong>Inkan/Hanko (Personal Seal)</strong> *If available; signatures are often accepted as alternatives.</li>
+                  </ul>
+                </div>
+
+                <h3>Procedure Steps</h3>
+                <ol>
+                  <li>Go to the "Citizens Division" (Shimin-ka) or "Family Registry Division" at your local municipal office.</li>
+                  <li>Fill out the "Moving-in Notification" (Jumin-ido-todoke) form and take a numbered ticket.</li>
+                  <li>Submit your Residence Card and Passport at the window to have your new address printed on the back.</li>
+                </ol>
+                <blockquote>
+                  <strong>💡 Advice:</strong> If you find it difficult to fill out forms or communicate in Japanese, we recommend booking a supporter via "Tunatomo" to accompany you!
+                </blockquote>
+              </div>
             </div>
 
             <!-- 在留カード -->
@@ -653,10 +773,17 @@
 
             <!-- 国民健康保険 -->
             <div class="info-tab-content" id="info-health-insurance">
-                            <!-- 魚のベースボディ (実画像キャラクター) -->
-                 <img id="fish-body-img" src="images/Vinit4.jpg" alt="マイフィッシュ" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid #fff; box-shadow: var(--shadow-lg);">住民登録を行う際に、同じ区役所・市役所の「保険年金課」で同時に手続きできます。</li>
-                  <li><strong>保険料:</strong> 留学生は前年の所得がないため、申請することで保険料が大幅に減額されます（月額1,500円〜2,000円程度になります）。</li>
-                </ul>
+              <div class="info-body">
+                <h2>国民健康保険について</h2>
+                <p>日本に3ヶ月以上滞在するすべての外国人は、国民健康保険への加入が義務付けられています。加入すると、病院で支払う医療費が<strong>3割（30%）のみ</strong>になります。</p>
+                
+                <div class="info-step-box">
+                  <h3>主なポイント</h3>
+                  <ul>
+                    <li><strong>加入方法:</strong> 役所で住民登録（住所の登録）をする際、同時に同じ役所の「保険年金課」の窓口で手続きできます。</li>
+                    <li><strong>保険料の減額:</strong> 留学生はアルバイトなどの前年所得が少ないため、減額申請を行うことで保険料が月々1,500円〜2,000円程度に抑えられます。<strong>必ず窓口で減額申請について確認してください。</strong></li>
+                  </ul>
+                </div>
               </div>
             </div>
 
@@ -818,12 +945,11 @@
               <div class="form-group" style="margin-bottom: 24px;">
                 <label for="select-fish-model">お魚のキャラクター・シーンを選択</label>
                 <select id="select-fish-model" style="max-width: 300px;">
-                  <option value="images/Tuna3.jpg">笑顔（アップ）</option>
-                  <option value="images/Vinit4.jpg">スマホ操作中</option>
+                  <option value="images/Tuna4.jpg">スマホ操作中</option>
                   <option value="images/Tuna6.jpg">キャンパス（挨拶）</option>
                   <option value="images/Tuna4.jpg">クッキング（料理中）</option>
                   <option value="images/Tuna5.jpg">寂しい（しょんぼり）</option>
-                  <option value="images/Vinit5.jpg">お悩み中（困り顔）</option>
+                  <option value="images/Tuna5.jpg">お悩み中（困り顔）</option>
                 </select>
               </div>
               <p class="panel-subtitle" style="border-top: 1px solid var(--color-border); padding-top: 16px;">持っているアイテムを装備できます。</p>
@@ -858,24 +984,261 @@
         </div>
       </section>
 
+      <!-- ============================================== -->
+      <!-- 10. 管理者ダッシュボードビュー (#/admin) -->
+      <!-- ============================================== -->
+      <section id="view-admin" class="app-view">
+        <div class="content-container">
+          <div class="page-title-area">
+            <h1>
+              <span class="lang-ja">管理者ダッシュボード</span>
+              <span class="lang-en">Admin Dashboard</span>
+            </h1>
+            <p>
+              <span class="lang-ja">予約状況の管理、ユーザーの確認、チャットの監視を行えます。</span>
+              <span class="lang-en">Manage bookings, verify users, and monitor chats/reports.</span>
+            </p>
+          </div>
+
+          <div class="admin-tabs" style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 2px solid var(--color-border); padding-bottom: 8px;">
+            <button class="btn btn-primary admin-tab-btn" data-tab="bookings">
+              <span class="lang-ja">予約管理</span>
+              <span class="lang-en">Bookings</span>
+            </button>
+            <button class="btn btn-outline admin-tab-btn" data-tab="users">
+              <span class="lang-ja">ユーザー管理</span>
+              <span class="lang-en">Users</span>
+            </button>
+            <button class="btn btn-outline admin-tab-btn" data-tab="chats">
+              <span class="lang-ja">チャット監視</span>
+              <span class="lang-en">Chat Monitor & Reports</span>
+            </button>
+          </div>
+
+          <!-- 予約管理パネル -->
+          <div class="admin-panel active" id="admin-panel-bookings">
+            <div class="card">
+              <h2>
+                <span class="lang-ja">同行サポート予約一覧</span>
+                <span class="lang-en">Companion Support Bookings</span>
+              </h2>
+              <div class="table-responsive" style="overflow-x: auto; margin-top: 16px;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr style="border-bottom: 2px solid var(--color-border); padding: 12px;">
+                      <th style="padding: 12px;">ID</th>
+                      <th style="padding: 12px;"><span class="lang-ja">利用者</span><span class="lang-en">Student</span></th>
+                      <th style="padding: 12px;"><span class="lang-ja">同行者</span><span class="lang-en">Supporter</span></th>
+                      <th style="padding: 12px;"><span class="lang-ja">サポート項目</span><span class="lang-en">Category</span></th>
+                      <th style="padding: 12px;"><span class="lang-ja">日時</span><span class="lang-en">Date/Time</span></th>
+                      <th style="padding: 12px;"><span class="lang-ja">状態</span><span class="lang-en">Status</span></th>
+                      <th style="padding: 12px;"><span class="lang-ja">アクション</span><span class="lang-en">Action</span></th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-bookings-table-body">
+                    <!-- JSで挿入 -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ユーザー管理パネル -->
+          <div class="admin-panel" id="admin-panel-users" style="display: none;">
+            <div class="card">
+              <h2>
+                <span class="lang-ja">登録ユーザー一覧</span>
+                <span class="lang-en">Registered Users</span>
+              </h2>
+              <div class="table-responsive" style="overflow-x: auto; margin-top: 16px;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr style="border-bottom: 2px solid var(--color-border);">
+                      <th style="padding: 12px;">Name</th>
+                      <th style="padding: 12px;">Email</th>
+                      <th style="padding: 12px;">Role</th>
+                      <th style="padding: 12px;">Points</th>
+                      <th style="padding: 12px;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-users-table-body">
+                    <!-- JSで挿入 -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- チャット監視パネル -->
+          <div class="admin-panel" id="admin-panel-chats" style="display: none;">
+            <div class="card">
+              <h2>
+                <span class="lang-ja">チャットルーム・通報ログ</span>
+                <span class="lang-en">Chat Monitor & Reports</span>
+              </h2>
+              <!-- 通報ログセクション -->
+              <div class="admin-reports-section" style="margin-top: 16px; margin-bottom: 24px; border-bottom: 1.5px solid var(--color-border); padding-bottom: 16px;">
+                <h3>
+                  <span class="lang-ja">⚠️ ユーザーからの通報ログ</span>
+                  <span class="lang-en">⚠️ User Reports Log</span>
+                </h3>
+                <div id="admin-reports-container" style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; background-color: var(--color-bg-light); border: 1px solid var(--color-border); padding: 12px; border-radius: var(--radius-sm);">
+                  <!-- JSで挿入 -->
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 16px;">
+                <div>
+                  <h3>
+                    <span class="lang-ja">アクティブなチャット</span>
+                    <span class="lang-en">Active Chats</span>
+                  </h3>
+                  <div class="admin-chats-list" id="admin-chats-list" style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;">
+                    <!-- JSで挿入 -->
+                  </div>
+                </div>
+                <div>
+                  <h3>
+                    <span class="lang-ja">選択中のチャット履歴 / 通報状況</span>
+                    <span class="lang-en">Selected Chat Log / Report Status</span>
+                  </h3>
+                  <div id="admin-chat-detail-panel" style="border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 16px; margin-top: 12px; height: 350px; overflow-y: auto; background-color: var(--color-bg-light);">
+                    <p class="text-muted" style="text-align: center; margin-top: 100px;">
+                      <span class="lang-ja">チャットルームを選択すると履歴が表示されます。</span>
+                      <span class="lang-en">Select a chat room to view message log.</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 11. チャットビュー (#/chat) -->
+      <!-- ============================================== -->
+      <section id="view-chat" class="app-view">
+        <div class="content-container">
+          <div class="chat-layout" style="display: grid; grid-template-columns: 300px 1fr; gap: 24px; height: 600px; max-height: calc(100vh - 200px);">
+            
+            <!-- チャットリスト -->
+            <div class="chat-sidebar card" style="display: flex; flex-direction: column; padding: 16px;">
+              <h2>
+                <span class="lang-ja">チャット一覧</span>
+                <span class="lang-en">Chats</span>
+              </h2>
+              <div id="chat-rooms-list" style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; flex: 1;">
+                <!-- JSで挿入 -->
+              </div>
+            </div>
+
+            <!-- チャットメイン領域 (未同意時のルール画面、またはトーク画面) -->
+            <div class="chat-main card" style="display: flex; flex-direction: column; padding: 0; overflow: hidden; position: relative;">
+              
+              <!-- 安全利用規約画面 (未同意時) -->
+              <div id="chat-rules-agreement" style="padding: 32px; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 16px;">🛡️</div>
+                <h2 style="margin-bottom: 12px;">
+                  <span class="lang-ja">チャットの安全利用規約</span>
+                  <span class="lang-en">Chat Safety Agreement</span>
+                </h2>
+                <div class="rules-box" style="background-color: var(--color-bg-light); border: 1.5px solid var(--color-border); border-radius: var(--radius-sm); padding: 20px; text-align: left; max-width: 500px; margin-bottom: 24px; font-size: 0.9rem;">
+                  <h4 style="margin-bottom: 8px; color: var(--color-primary);">
+                    <span class="lang-ja">つなともチャット利用ルール</span>
+                    <span class="lang-en">Tunatomo Chat Rules</span>
+                  </h4>
+                  <ul style="padding-left: 16px; display: flex; flex-direction: column; gap: 8px;">
+                    <li>
+                      <strong><span class="lang-ja">個人情報の保護:</span><span class="lang-en">Personal Info:</span></strong> 
+                      <span class="lang-ja">十分信頼できるまで、電話番号や住所などの個人情報を共有しないでください。</span>
+                      <span class="lang-en">Do not share sensitive personal information unless you are absolutely sure of their trust.</span>
+                    </li>
+                    <li>
+                      <strong><span class="lang-ja">出会い目的の禁止:</span><span class="lang-en">No Flirting:</span></strong> 
+                      <span class="lang-ja">ナンパや恋愛目的の行為、不適切な交際のアプローチは固く禁止します。</span>
+                      <span class="lang-en">Flirting, romantic approaches, and seek-seeking behaviors are strictly prohibited.</span>
+                    </li>
+                    <li>
+                      <strong><span class="lang-ja">嫌がらせ・ハラスメントの禁止:</span><span class="lang-en">No Harassment:</span></strong> 
+                      <span class="lang-ja">いかなるハラスメントや威圧的な行為も認められません。</span>
+                      <span class="lang-en">Any form of harassment, intimidating behavior, or abuse will result in an immediate ban.</span>
+                    </li>
+                    <li>
+                      <strong><span class="lang-ja">差別・暴言の禁止:</span><span class="lang-en">No Racism:</span></strong> 
+                      <span class="lang-ja">人種差別、文化的な偏見、暴言は厳禁です。お互いを尊重しましょう。</span>
+                      <span class="lang-en">Racism, discrimination, hatespeech, and slurs are strictly prohibited. Respect each other.</span>
+                    </li>
+                  </ul>
+                </div>
+                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px; cursor: pointer; font-weight: 700;">
+                  <input type="checkbox" id="chat-rules-check" style="width: auto;">
+                  <span class="lang-ja">規約を理解し、ルールを厳守することに同意します。</span>
+                  <span class="lang-en">I understand and agree to follow these rules.</span>
+                </label>
+                <button class="btn btn-primary" id="chat-agree-btn" disabled>
+                  <span class="lang-ja">チャットを開始する</span>
+                  <span class="lang-en">Start Chatting</span>
+                </button>
+              </div>
+
+              <!-- トーク画面 (同意済かつ選択時) -->
+              <div id="chat-conversation-active" style="display: none; flex-direction: column; height: 100%;">
+                <div class="chat-header" style="padding: 16px 24px; border-bottom: 1.5px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; background-color: var(--color-bg-light);">
+                  <h3 id="chat-partner-name">トーク相手</h3>
+                  <button class="btn btn-sm btn-outline" id="chat-report-btn" style="border-color: #dc3545; color: #dc3545;">
+                    <span class="lang-ja">⚠️ 通報する</span>
+                    <span class="lang-en">⚠️ Report User</span>
+                  </button>
+                </div>
+                <!-- メッセージ履歴 -->
+                <div class="chat-messages-body" id="chat-messages-container" style="flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background-color: #fafbfc;">
+                  <!-- JSでメッセージを挿入 -->
+                </div>
+                <!-- メッセージ入力 -->
+                <form id="chat-message-form" style="padding: 16px; border-top: 1.5px solid var(--color-border); display: flex; gap: 12px; align-items: center; background-color: #fff;">
+                  <input type="text" id="chat-input-text" required placeholder="メッセージを入力... / Type a message..." style="flex: 1; border-radius: 30px;">
+                  <button type="submit" class="btn btn-primary" style="border-radius: 50%; width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; min-width: 44px;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  </button>
+                </form>
+              </div>
+
+              <!-- チャット未選択画面 (同意済だが未選択) -->
+              <div id="chat-no-selection" style="display: none; justify-content: center; align-items: center; height: 100%; text-align: center; color: var(--color-text-muted);">
+                <p>
+                  <span class="lang-ja">左側のリストからチャット相手を選択してください。</span>
+                  <span class="lang-en">Select a chat partner from the sidebar.</span>
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <!-- グローバルフッター -->
     <footer class="global-footer">
+      <video class="footer-video-bg" autoplay loop muted playsinline>
+        <source src="12755545_1920_1080_30fps.mp4" type="video/mp4">
+      </video>
+      <div class="footer-overlay"></div>
       <div class="footer-container">
         <div class="footer-left">
           <div class="footer-logo">
             <h2>つなとも</h2>
-            <p>国際学生と地域を結ぶサポートネットワーク</p>
+            <p data-t="footer-subtitle">国際学生と地域を結ぶサポートネットワーク</p>
           </div>
           <p class="copyright">&copy; 2026 Tunatomo. All rights reserved.</p>
         </div>
         <div class="footer-right">
-          <h3>お問い合わせ</h3>
+          <h3 data-t="footer-contact">お問い合わせ</h3>
           <p>メール: contact@tunatomo.example.com</p>
           <div class="footer-social">
             <a href="https://line.me/R/ti/p/mock" target="_blank" rel="noopener noreferrer" class="social-link line-link">
-              <span>LINE公式アカウント</span>
+              <span data-t="footer-social-line">LINE公式アカウント</span>
             </a>
           </div>
         </div>

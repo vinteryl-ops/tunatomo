@@ -2,14 +2,106 @@
    つなとも (Tunatomo) - アプリケーション ロジック (app.js)
    ========================================================================== */
 
+// Blacklisted words — warning + admin notification + 30s timeout
+const BLACKLIST_WORDS = [
+  "nigga","nigger","niggas","niggers","pajeet","pajeets","chink","kike","spic","wetback","raghead","sandnigger","coon","cracker","faggot","fag","retard","tranny","dyke","whore","slut"
+];
+
+function containsBlacklist(text) {
+  const lower = text.toLowerCase();
+  return BLACKLIST_WORDS.some(w => {
+    const re = new RegExp(`\\b${w}\\b`, "i");
+    return re.test(lower);
+  });
+}
+
+const TRANSLATIONS = {
+  en: {
+    "nav-home": "Home",
+    "nav-matching": "Find Supporters",
+    "nav-booking": "Book Support",
+    "nav-events": "Local Events",
+    "nav-board": "Q&A Board",
+    "nav-info": "Helpful Info",
+    "nav-chat": "Chat",
+    "nav-admin": "Admin Dashboard",
+    "hero-badge": "Multicultural Coexistence Platform",
+    "hero-title": "Start your new life in Japan, with friends.",
+    "hero-description": "\"Tunatomo\" is a matching and community service for international students, Japanese students, and local residents to connect and support each other.",
+    "hero-find-btn": "Find Supporters",
+    "hero-book-btn": "Book Support",
+    "quick-booking-title": "Companion Support",
+    "quick-booking-desc": "Book companion support for municipal procedures, bank account openings, and more.",
+    "quick-board-title": "Q&A Board",
+    "quick-board-desc": "Post questions and ask everyone for advice about daily life difficulties.",
+    "quick-events-title": "Local Events",
+    "quick-events-desc": "Join local exchange events and make friends with students and residents!",
+    "quick-info-title": "Helpful Guide",
+    "quick-info-desc": "Guides on municipal procedures, SIM cards, National Health Insurance, etc.",
+    "fish-banner-badge": "Fish Growth & Costumes",
+    "fish-banner-title": "Grow your \"Fish\" through active participation!",
+    "fish-banner-desc": "Earn points by participating in support, attending events, and answering questions. Unlock cute hats, accessories, and customization items for your fish!",
+    "fish-banner-btn": "View My Fish",
+    "home-announcements-title": "Latest Announcements",
+    "home-events-title": "Recommended Events",
+    "home-events-more": "View All →",
+    "line-promo-tag": "Consult on LINE",
+    "line-promo-title": "Ask us anything on LINE whenever you need help!",
+    "line-promo-desc": "The Tunatomo office and supporters will answer your questions and help with minor daily life issues via LINE. Add us by scanning the QR code or clicking the button.",
+    "line-promo-btn": "💬 Add Tunatomo on LINE",
+    "line-promo-qr-label": "Tunatomo Official LINE",
+    "footer-subtitle": "Support network connecting international students and regions",
+    "footer-contact": "Contact Us",
+    "footer-social-line": "Official LINE Account"
+  },
+  ja: {
+    "nav-home": "ホーム",
+    "nav-matching": "サポーターを探す",
+    "nav-booking": "支援同行予約",
+    "nav-events": "地域交流",
+    "nav-board": "相談掲示板",
+    "nav-info": "お役立ち情報",
+    "nav-chat": "チャット",
+    "nav-admin": "管理画面",
+    "hero-badge": "多文化共生プラットフォーム",
+    "hero-title": "日本での新しい生活を、仲間と共に。",
+    "hero-description": "「つなとも」は、日本に住む国際学生と、日本人学生や地域住民がつながり、支え合うためのマッチング・コミュニティサービスです。",
+    "hero-find-btn": "サポーターを探す",
+    "hero-book-btn": "同行サポートを予約",
+    "quick-booking-title": "同行予約",
+    "quick-booking-desc": "役所手続きや口座開設などの同行サポートを予約できます。",
+    "quick-board-title": "相談掲示板",
+    "quick-board-desc": "日々の困りごとや質問を投稿して、みんなに相談できます。",
+    "quick-events-title": "地域交流",
+    "quick-events-desc": "交流イベントに参加して、他の学生や地域住民と仲良くなろう！",
+    "quick-info-title": "お役立ち情報",
+    "quick-info-desc": "役所手続き、SIM契約、国民健康保険など各種ガイドを提供。",
+    "fish-banner-badge": "魚育成 & コスチューム",
+    "fish-banner-title": "活動してあなたの「お魚」を成長させよう！",
+    "fish-banner-desc": "サポートへの参加、イベントの出席、相談への回答など、サイト内での活動でポイントを獲得できます。ポイントを集めると、可愛い帽子やアクセサリーなどのコスチュームを解放できます！",
+    "fish-banner-btn": "マイフィッシュを見る",
+    "home-announcements-title": "最新のお知らせ",
+    "home-events-title": "おすすめイベント",
+    "home-events-more": "すべて見る →",
+    "line-promo-tag": "公式LINEで相談",
+    "line-promo-title": "困ったときは、いつでもLINEで気軽にご相談ください！",
+    "line-promo-desc": "つなとも事務局とサポートスタッフが、生活の些細な質問や急な困りごとにLINEでお答えします。下のQRコードを読み取るか、URLから友だち追加してください。",
+    "line-promo-btn": "💬 LINE友だち追加はこちら",
+    "line-promo-qr-label": "つなとも公式LINE",
+    "footer-subtitle": "国際学生と地域を結ぶサポートネットワーク",
+    "footer-contact": "お問い合わせ",
+    "footer-social-line": "LINE公式アカウント"
+  }
+};
+
 // 1. デモ用初期データ定義
 const DEFAULT_SUPPORTERS = [
   {
     id: "supporter_1",
     name: "古川 柚葉",
     role: "student_japanese",
-    avatar: "images/Vinit.jpg",
-    university: "立命館大学 産業社会学部",
+    avatar: "images/Tuna1.jpg",
+    university: "Ritsumeikan Asia Pacific University (APU) - Social Studies",
     hometown: "京都府",
     languages: ["日本語", "英語"],
     learnLanguages: ["韓国語"],
@@ -21,8 +113,8 @@ const DEFAULT_SUPPORTERS = [
     id: "supporter_2",
     name: "山田 太郎",
     role: "student_japanese",
-    avatar: "images/Vinit2.jpg",
-    university: "立命館大学 理工学部",
+    avatar: "images/Tuna2.jpg",
+    university: "Ritsumeikan Asia Pacific University (APU) - Engineering",
     hometown: "滋賀県",
     languages: ["日本語", "英語", "中国語"],
     learnLanguages: ["中国語"],
@@ -34,7 +126,7 @@ const DEFAULT_SUPPORTERS = [
     id: "supporter_3",
     name: "高橋 恵子",
     role: "resident_local",
-    avatar: "images/Vinit3.jpg",
+    avatar: "images/Tuna3.jpg",
     university: "地域住民",
     hometown: "京都府京都市",
     languages: ["日本語"],
@@ -67,7 +159,7 @@ const DEFAULT_EVENTS = [
     date: "2026年6月28日(日) 10:00 - 16:00",
     location: "嵐山周辺（阪急嵐山駅集合）",
     desc: "嵐山の竹林や渡月橋を散策し、お寺を巡ります。抹茶アイスを食べながら、留学生とサポーターで楽しくおしゃべりしましょう！",
-    image: "images/Vinit5.jpg",
+    image: "images/Tuna5.jpg",
     participants: ["古川 柚葉"]
   }
 ];
@@ -119,7 +211,8 @@ class TunatomoApp {
       events: [],
       threads: [],
       supporters: DEFAULT_SUPPORTERS,
-      pointsHistory: []
+      pointsHistory: [],
+      lang: localStorage.getItem("tunatomo_lang") || "ja"
     };
     
     this.init();
@@ -131,6 +224,8 @@ class TunatomoApp {
     if (savedState) {
       try {
         this.state = JSON.parse(savedState);
+        if (!this.state.chats) this.state.chats = [];
+        if (!this.state.reports) this.state.reports = [];
       } catch (e) {
         console.error("State parse error", e);
         this.loadDefaultState();
@@ -141,6 +236,9 @@ class TunatomoApp {
 
     // ユーザー情報の整合性確認（デモ用にサポーターもユーザーリストに含める）
     this.ensureSupportersInUsers();
+    
+    this.state.lang = localStorage.getItem("tunatomo_lang") || "ja";
+    this.updateLanguageUI();
     
     // イベントリスナーの登録
     this.registerEventListeners();
@@ -156,10 +254,10 @@ class TunatomoApp {
         password: "password",
         name: "Marie",
         role: "student_international",
-        avatar: "images/Vinit4.jpg",
+        avatar: "images/Tuna4.jpg",
         country: "フランス",
         nativeLang: "フランス語",
-        university: "立命館大学 国際関係学部",
+        university: "Ritsumeikan Asia Pacific University (APU) - International Relations",
         japaneseLevel: "日常会話レベル",
         hobbies: ["映画鑑賞", "料理", "京都のカフェ巡り"],
         skills: ["フランス語指導", "お菓子作り"],
@@ -179,8 +277,8 @@ class TunatomoApp {
         password: "password",
         name: "古川 柚葉",
         role: "student_japanese",
-        avatar: "images/Vinit.jpg",
-        university: "立命館大学 産業社会学部",
+        avatar: "images/Tuna1.jpg",
+        university: "Ritsumeikan Asia Pacific University (APU) - Social Studies",
         hometown: "京都府",
         speakLangs: ["日本語", "英語"],
         learnLangs: ["韓国語"],
@@ -222,6 +320,33 @@ class TunatomoApp {
       { userId: "student_marie", action: "新規登録ボーナス", points: 50, date: "2026/06/01" },
       { userId: "student_marie", action: "質問投稿: スーパーについて", points: 20, date: "2026/06/08" },
       { userId: "student_marie", action: "イベント参加: たこ焼きパーティー", points: 50, date: "2026/06/10" }
+    ];
+
+    // デモ用チャット
+    this.state.chats = [
+      {
+        id: "chat_supporter_1_student_marie",
+        userIds: ["supporter_1", "student_marie"],
+        messages: [
+          { id: "msg_1", senderId: "student_marie", senderName: "Marie", text: "こんにちは！来週の市役所手続きの同行予約について相談したいです。", time: "10:02" },
+          { id: "msg_2", senderId: "supporter_1", senderName: "古川 柚葉", text: "こんにちは、Marieさん！転入届と健康保険の手続きですね。喜んでお手伝いします！来週月曜日の午前10時でよろしいですか？", time: "10:05" },
+          { id: "msg_3", senderId: "student_marie", senderName: "Marie", text: "はい！大丈夫です。よろしくお願いいたします！", time: "10:06" },
+          { id: "msg_4", senderId: "supporter_1", senderName: "古川 柚葉", text: "確認しました。当日は区役所の正面入り口で待ち合わせしましょう。在留カードとパスポートをお忘れなく！", time: "10:07" }
+        ]
+      }
+    ];
+
+    // デモ用通報ログ
+    this.state.reports = [
+      {
+        id: "report_1",
+        reporterName: "山田 太郎",
+        reportedName: "怪しいユーザー",
+        reason: "不適切な出会い目的の発言",
+        details: "チャットで執拗にLINEのID交換を迫られ、恋愛目的の発言を受けました。",
+        chatRoomId: "chat_demo_report",
+        timestamp: "2026/06/11 15:30:22"
+      }
     ];
 
     this.saveState();
@@ -332,6 +457,12 @@ class TunatomoApp {
       case "game":
         this.renderGame();
         break;
+      case "chat":
+        this.renderChat();
+        break;
+      case "admin":
+        this.renderAdmin();
+        break;
     }
   }
 
@@ -366,12 +497,42 @@ class TunatomoApp {
       const email = document.getElementById("login-email").value;
       const pass = document.getElementById("login-password").value;
       
+      if ((email === "admin" || email === "admin@tunatomo.com") && pass === "admin") {
+        const adminUser = {
+          id: "admin",
+          email: "admin@tunatomo.com",
+          name: "Admin",
+          role: "admin",
+          avatar: "images/Tuna9.jpg",
+          points: 9999,
+          level: 99,
+          fishName: "キングシャーク",
+          fishColor: "#ff0000",
+          fishTailColor: "#990000",
+          activeFishModel: "images/Tuna9.jpg",
+          unlockedItems: [],
+          equippedItems: { hat: null, glasses: null, clothing: null, accessory: null },
+          agreedToChatRules: true
+        };
+        // Add admin user to users list if not already there
+        if (!this.state.users.some(u => u.id === "admin")) {
+          this.state.users.push(adminUser);
+        }
+        this.state.currentUser = adminUser;
+        this.saveState();
+        alert("管理者としてログインしました。 (Logged in as Admin)");
+        window.location.hash = "#/admin";
+        this.updateHeader();
+        return;
+      }
+      
       const user = this.state.users.find(u => u.email === email && u.password === pass);
       if (user) {
         this.state.currentUser = user;
         this.saveState();
         alert(`おかえりなさい、${user.name}さん！`);
         window.location.hash = "#/profile";
+        this.updateHeader();
       } else {
         alert("メールアドレスまたはパスワードが正しくありません。");
       }
@@ -445,14 +606,23 @@ class TunatomoApp {
     document.getElementById("profile-edit-btn").addEventListener("click", () => {
       document.getElementById("profile-info-show").style.display = "none";
       document.getElementById("profile-edit-form").classList.add("active");
-      
-      // フォームに値をセット
+
       const u = this.state.currentUser;
       document.getElementById("edit-name").value = u.name;
       document.getElementById("edit-university").value = u.university || "";
       document.getElementById("edit-hobbies").value = u.hobbies ? u.hobbies.join(", ") : "";
       document.getElementById("edit-skills").value = u.skills ? u.skills.join(", ") : "";
       document.getElementById("edit-bio").value = u.bio || "";
+
+      // Set avatar radio
+      const avatarRadios = document.querySelectorAll('input[name="edit-avatar"]');
+      avatarRadios.forEach(r => { r.checked = r.value === (u.avatar || "images/Tuna1.jpg"); });
+
+      // Set college/semester
+      const collegeEl = document.getElementById("edit-college");
+      const semesterEl = document.getElementById("edit-semester");
+      if (collegeEl) collegeEl.value = u.college || "";
+      if (semesterEl) semesterEl.value = u.semester || "";
 
       if (u.role === "student_international") {
         document.getElementById("student-intl-fields-container").style.display = "block";
@@ -478,12 +648,22 @@ class TunatomoApp {
     document.getElementById("profile-edit-form").addEventListener("submit", (e) => {
       e.preventDefault();
       const u = this.state.currentUser;
-      
+
       u.name = document.getElementById("edit-name").value;
       u.university = document.getElementById("edit-university").value;
       u.hobbies = document.getElementById("edit-hobbies").value.split(",").map(s => s.trim()).filter(Boolean);
       u.skills = document.getElementById("edit-skills").value.split(",").map(s => s.trim()).filter(Boolean);
       u.bio = document.getElementById("edit-bio").value;
+
+      // Save avatar
+      const selectedAvatar = document.querySelector('input[name="edit-avatar"]:checked');
+      if (selectedAvatar) u.avatar = selectedAvatar.value;
+
+      // Save college/semester
+      const collegeEl = document.getElementById("edit-college");
+      const semesterEl = document.getElementById("edit-semester");
+      if (collegeEl) u.college = collegeEl.value;
+      if (semesterEl) u.semester = semesterEl.value;
 
       if (u.role === "student_international") {
         u.country = document.getElementById("edit-country").value;
@@ -647,6 +827,122 @@ class TunatomoApp {
         document.getElementById(panelId).classList.add("active");
       });
     });
+
+    // 言語切り替えボタンのリスナー
+    const handleLangToggle = () => {
+      this.state.lang = this.state.lang === "ja" ? "en" : "ja";
+      localStorage.setItem("tunatomo_lang", this.state.lang);
+      this.updateLanguageUI();
+      const hash = window.location.hash || "#/home";
+      const pageName = hash.split("/")[1] || "home";
+      this.renderView(pageName);
+    };
+
+    const toggleBtn = document.getElementById("lang-toggle-btn");
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", handleLangToggle);
+    }
+    const mobileToggleBtn = document.getElementById("mobile-lang-toggle-btn");
+    if (mobileToggleBtn) {
+      mobileToggleBtn.addEventListener("click", handleLangToggle);
+    }
+
+    // スクロールインジケーターのクリックイベント
+    const scrollInd = document.getElementById("scroll-indicator");
+    if (scrollInd) {
+      scrollInd.addEventListener("click", () => {
+        const target = document.querySelector(".quick-grid") || document.querySelector(".content-container");
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    }
+
+    // スクロールエフェクト（ヒーローパララックス＆ヘッダー変化）
+    window.addEventListener("scroll", () => {
+      const scrollY = window.scrollY;
+      const hero = document.querySelector(".hero-section");
+      if (hero) {
+        const heroHeight = hero.offsetHeight;
+        // Scroll fade-out for hero content
+        const opacity = Math.max(0, 1 - (scrollY / (heroHeight * 0.6)));
+        const translate = scrollY * 0.35;
+        
+        const slideContent = document.querySelector(".slide-content");
+        if (slideContent) {
+          slideContent.style.opacity = opacity;
+          slideContent.style.transform = `translateY(${translate}px)`;
+        }
+        
+        // Header style update on scroll
+        const header = document.querySelector(".global-header");
+        if (header) {
+          if (scrollY > 50) {
+            header.style.background = "rgba(255, 255, 255, 0.85)";
+            header.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.1), var(--shadow-glass)";
+            header.style.border = "1px solid rgba(255, 255, 255, 0.6)";
+          } else {
+            header.style.background = "rgba(255, 255, 255, 0.65)";
+            header.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.05), var(--shadow-glass)";
+            header.style.border = "1px solid rgba(255, 255, 255, 0.4)";
+          }
+        }
+      }
+    });
+
+    // 管理者タブの切り替え
+    document.querySelectorAll(".admin-tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".admin-tab-btn").forEach(b => {
+          b.classList.remove("btn-primary");
+          b.classList.add("btn-outline");
+        });
+        btn.classList.add("btn-primary");
+        btn.classList.remove("btn-outline");
+
+        const targetTab = btn.getAttribute("data-tab");
+        document.querySelectorAll(".admin-panel").forEach(panel => {
+          panel.style.display = "none";
+        });
+        const activePanel = document.getElementById(`admin-panel-${targetTab}`);
+        if (activePanel) {
+          activePanel.style.display = "block";
+        }
+      });
+    });
+  }
+
+  // 4.5 翻訳機能の更新
+  updateLanguageUI() {
+    const lang = this.state.lang || "ja";
+    const dict = TRANSLATIONS[lang];
+    
+    // Update all elements with data-t
+    document.querySelectorAll("[data-t]").forEach(el => {
+      const key = el.getAttribute("data-t");
+      if (dict && dict[key]) {
+        el.innerText = dict[key];
+      }
+    });
+
+    // Update buttons text
+    const toggleBtn = document.getElementById("lang-toggle-btn");
+    if (toggleBtn) {
+      toggleBtn.innerText = lang === "ja" ? "English" : "日本語";
+    }
+    const mobileToggleBtn = document.getElementById("mobile-lang-toggle-btn");
+    if (mobileToggleBtn) {
+      mobileToggleBtn.innerText = lang === "ja" ? "English" : "日本語";
+    }
+
+    // Toggle body class
+    if (lang === "en") {
+      document.body.classList.add("lang-en");
+      document.body.classList.remove("lang-ja");
+    } else {
+      document.body.classList.add("lang-ja");
+      document.body.classList.remove("lang-en");
+    }
   }
 
   // 5. グローバルヘッダーの更新
@@ -654,15 +950,40 @@ class TunatomoApp {
     const statusEl = document.getElementById("header-user-status");
     const mobileNavUserEl = document.getElementById("mobile-nav-user");
     const user = this.state.currentUser;
+    const isEn = this.state.lang === "en";
+
+    const navAdmin = document.getElementById("nav-admin");
+    const mobileNavAdmin = document.getElementById("mobile-nav-admin");
+    const navChat = document.getElementById("nav-chat");
+    const mobileNavChat = document.getElementById("mobile-nav-chat");
 
     if (user) {
-      const roleText = user.role === "student_international" ? "国際学生" : user.role === "student_japanese" ? "日本人学生" : "地域住民";
-      const badgeClass = user.role === "student_international" ? "badge-student-intl" : user.role === "student_japanese" ? "badge-student-jp" : "badge-resident";
+      // Show/Hide admin/chat links
+      if (user.role === "admin") {
+        if (navAdmin) navAdmin.style.display = "block";
+        if (mobileNavAdmin) mobileNavAdmin.style.display = "block";
+        if (navChat) navChat.style.display = "block";
+        if (mobileNavChat) mobileNavChat.style.display = "block";
+      } else {
+        if (navAdmin) navAdmin.style.display = "none";
+        if (mobileNavAdmin) mobileNavAdmin.style.display = "none";
+        if (navChat) navChat.style.display = "block";
+        if (mobileNavChat) mobileNavChat.style.display = "block";
+      }
+
+      const roleText = user.role === "admin"
+        ? (isEn ? "Admin" : "管理者")
+        : user.role === "student_international" 
+          ? (isEn ? "International Student" : "国際学生") 
+          : user.role === "student_japanese" 
+            ? (isEn ? "Japanese Supporter" : "日本人学生") 
+            : (isEn ? "Local Resident" : "地域住民");
+      const badgeClass = user.role === "admin" ? "badge-admin" : user.role === "student_international" ? "badge-student-intl" : user.role === "student_japanese" ? "badge-student-jp" : "badge-resident";
 
       const html = `
         <div class="header-user-badge">
           <a href="#/profile">
-            <img src="${user.avatar || 'images/Vinit.jpg'}" alt="${user.name}" class="header-user-avatar">
+            <img src="${user.avatar || 'images/Tuna1.jpg'}" alt="${user.name}" class="header-user-avatar">
           </a>
           <div class="header-user-meta">
             <span class="header-username">${user.name}</span>
@@ -673,23 +994,33 @@ class TunatomoApp {
             </div>
           </div>
         </div>
-        <a href="#/home" class="logout-btn-header" id="logout-btn">ログアウト</a>
+        <a href="#/home" class="logout-btn-header" id="logout-btn">${isEn ? "Logout" : "ログアウト"}</a>
       `;
       statusEl.innerHTML = html;
 
       // モバイル用メニュー項目
-      mobileNavUserEl.innerHTML = `
-        <a href="#/profile" class="mobile-nav-link" data-page="profile">プロフィール・予約管理</a>
-        <a href="#/game" class="mobile-nav-link" data-page="game">お魚育成ゲーム (${user.points} pt)</a>
-        <a href="#/home" class="mobile-nav-link" id="mobile-logout-btn">ログアウト</a>
-      `;
+      let mobileNavHtml = "";
+      if (user.role === "admin") {
+        mobileNavHtml = `
+          <a href="#/admin" class="mobile-nav-link" data-page="admin">${isEn ? "Admin Dashboard" : "管理者ダッシュボード"}</a>
+          <a href="#/chat" class="mobile-nav-link" data-page="chat">${isEn ? "Chat Monitor" : "チャット監視"}</a>
+        `;
+      } else {
+        mobileNavHtml = `
+          <a href="#/profile" class="mobile-nav-link" data-page="profile">${isEn ? "Profile & Bookings" : "プロフィール・予約管理"}</a>
+          <a href="#/game" class="mobile-nav-link" data-page="game">${isEn ? "Fish Grow Game" : "お魚育成ゲーム"} (${user.points} pt)</a>
+          <a href="#/chat" class="mobile-nav-link" data-page="chat">${isEn ? "Chat Rooms" : "チャット一覧"}</a>
+        `;
+      }
+      mobileNavHtml += `<a href="#/home" class="mobile-nav-link" id="mobile-logout-btn">${isEn ? "Logout" : "ログアウト"}</a>`;
+      mobileNavUserEl.innerHTML = mobileNavHtml;
 
       // ログアウト処理アタッチ
       const logoutAction = (e) => {
         e.preventDefault();
         this.state.currentUser = null;
         this.saveState();
-        alert("ログアウトしました。");
+        alert(isEn ? "Logged out successfully." : "ログアウトしました。");
         window.location.hash = "#/home";
         this.updateHeader();
       };
@@ -698,11 +1029,16 @@ class TunatomoApp {
       document.getElementById("mobile-logout-btn").addEventListener("click", logoutAction);
 
     } else {
+      if (navAdmin) navAdmin.style.display = "none";
+      if (mobileNavAdmin) mobileNavAdmin.style.display = "none";
+      if (navChat) navChat.style.display = "none";
+      if (mobileNavChat) mobileNavChat.style.display = "none";
+
       statusEl.innerHTML = `
-        <a href="#/login" class="btn btn-primary btn-sm login-btn">ログイン / 登録</a>
+        <a href="#/login" class="btn btn-primary btn-sm login-btn">${isEn ? "Login / Register" : "ログイン / 登録"}</a>
       `;
       mobileNavUserEl.innerHTML = `
-        <a href="#/login" class="btn btn-primary btn-block">ログイン / アカウント作成</a>
+        <a href="#/login" class="btn btn-primary btn-block">${isEn ? "Login / Create Account" : "ログイン / アカウント作成"}</a>
       `;
     }
   }
@@ -781,7 +1117,7 @@ class TunatomoApp {
     }
 
     // 基本表示項目の更新
-    document.getElementById("profile-display-avatar").src = user.avatar || "images/Vinit.jpg";
+    document.getElementById("profile-display-avatar").src = user.avatar || "images/Tuna1.jpg";
     document.getElementById("profile-display-name").innerText = user.name;
     document.getElementById("profile-display-email").innerText = user.email;
     document.getElementById("profile-display-points").innerText = user.points;
@@ -793,8 +1129,10 @@ class TunatomoApp {
     // 詳細表示用HTMLの組み立て
     const infoShowEl = document.getElementById("profile-info-show");
     let infoHtml = `
-      <div class="profile-info-row"><span class="label">ニックネーム</span><span class="val">${user.name}</span></div>
-      <div class="profile-info-row"><span class="label">大学・所属</span><span class="val">${user.university || "未記入"}</span></div>
+      <div class="profile-info-row"><span class="label">ニックネーム / Name</span><span class="val">${user.name}</span></div>
+      <div class="profile-info-row"><span class="label">大学 / University</span><span class="val">${user.university || "Ritsumeikan Asia Pacific University (APU)"}</span></div>
+      <div class="profile-info-row"><span class="label">カレッジ / College</span><span class="val">${user.college || "—"}</span></div>
+      <div class="profile-info-row"><span class="label">セメスター / Semester</span><span class="val">${user.semester || "—"}</span></div>
       <div class="profile-info-row">
         <span class="label">趣味</span>
         <div class="val tags-list-style">${user.hobbies && user.hobbies.length ? user.hobbies.map(h => `<span class="tag-badge">${h}</span>`).join("") : "未記入"}</div>
@@ -970,37 +1308,40 @@ class TunatomoApp {
     document.getElementById("results-count").innerText = filtered.length;
 
     if (filtered.length === 0) {
-      listEl.innerHTML = `<p class="text-muted" style="grid-column: 1 / -1; text-align:center; padding: 40px;">条件に合うサポーターが見つかりませんでした。</p>`;
+      listEl.innerHTML = `<p class="text-muted" style="grid-column: 1 / -1; text-align:center; padding: 40px;">${this.state.lang === "en" ? "No supporters found matching the criteria." : "条件に合うサポーターが見つかりませんでした。"}</p>`;
       return;
     }
 
     let html = "";
     filtered.forEach(sup => {
-      const roleText = sup.role === "student_japanese" ? "日本人学生" : "地域住民";
+      const isEn = this.state.lang === "en";
+      const roleText = sup.role === "student_japanese" 
+        ? (isEn ? "Japanese Supporter" : "日本人学生") 
+        : (isEn ? "Local Resident" : "地域住民");
       const badgeClass = sup.role === "student_japanese" ? "badge-student-jp" : "badge-resident";
 
       html += `
         <div class="card supporter-card">
           <div class="supporter-card-top">
-            <img src="${sup.avatar || 'images/Vinit.jpg'}" alt="${sup.name}" class="supporter-avatar">
+            <img src="${sup.avatar || 'images/Tuna1.jpg'}" alt="${sup.name}" class="supporter-avatar">
             <div class="supporter-meta">
               <span class="badge ${badgeClass}" style="width: fit-content; margin-bottom:4px;">${roleText}</span>
               <h3>${sup.name}</h3>
-              <span class="uni">${sup.university || "地域サポーター"}</span>
+              <span class="uni">${sup.university || (isEn ? "Local Supporter" : "地域サポーター")}</span>
             </div>
           </div>
-          <p class="supporter-bio">${sup.bio || "よろしくお願いいたします。"}</p>
+          <p class="supporter-bio">${sup.bio || (isEn ? "Happy to help you." : "よろしくお願いいたします。")}</p>
           <div class="supporter-tags">
             <div class="supporter-tag-row">
-              <span class="tag-lbl">対応言語:</span>
-              <div class="tag-vals">${sup.speakLangs ? sup.speakLangs.map(l => `<span class="tag-badge">${l}</span>`).join("") : "日本語"}</div>
+              <span class="tag-lbl">${isEn ? "Languages:" : "対応言語:"}</span>
+              <div class="tag-vals">${sup.speakLangs ? sup.speakLangs.map(l => `<span class="tag-badge">${l}</span>`).join("") : (isEn ? "Japanese" : "日本語")}</div>
             </div>
             <div class="supporter-tag-row">
-              <span class="tag-lbl">趣味:</span>
-              <div class="tag-vals">${sup.hobbies ? sup.hobbies.map(h => `<span class="tag-badge">${h}</span>`).join("") : "未設定"}</div>
+              <span class="tag-lbl">${isEn ? "Hobbies:" : "趣味:"}</span>
+              <div class="tag-vals">${sup.hobbies ? sup.hobbies.map(h => `<span class="tag-badge">${h}</span>`).join("") : (isEn ? "Not set" : "未設定")}</div>
             </div>
           </div>
-          <button class="btn btn-outline btn-block select-supporter-btn" data-id="${sup.id}" data-name="${sup.name}">この人に同行サポートを頼む</button>
+          <button class="btn btn-outline btn-block select-supporter-btn" data-id="${sup.id}" data-name="${sup.name}">${isEn ? "Request Companion Support" : "この人に同行サポートを頼む"}</button>
         </div>
       `;
     });
@@ -1289,19 +1630,19 @@ class TunatomoApp {
     document.getElementById("game-fish-name").innerText = user.fishName || `${user.name}のサカナ`;
     document.getElementById("game-fish-level").innerText = user.level || 1;
     
-    // XP計算とレベルバー
-    const currentPoints = user.points || 0;
+    // XP計算とレベルバー (based on totalXP)
+    const totalXP = user.totalXP || user.points || 0;
     const currentLevel = user.level || 1;
-    const pointsForCurrentLevel = (currentLevel - 1) * 100;
-    const pointsForNextLevel = currentLevel * 100;
-    const xpInCurrentLevel = currentPoints - pointsForCurrentLevel;
-    const xpNeededForLevelUp = 100; // 100ptごとに1レベルアップ
-    
-    const percent = Math.min(100, Math.max(0, (xpInCurrentLevel / xpNeededForLevelUp) * 100));
+    // Compute XP threshold at start of current level
+    let xpBase = 0;
+    for (let lv = 1; lv < currentLevel; lv++) xpBase += lv * 100;
+    const xpForNextLevel = currentLevel * 100;
+    const xpInCurrentLevel = totalXP - xpBase;
+    const percent = Math.min(100, Math.max(0, (xpInCurrentLevel / xpForNextLevel) * 100));
     document.getElementById("game-xp-fill").style.width = `${percent}%`;
     document.getElementById("game-xp-current").innerText = xpInCurrentLevel;
-    document.getElementById("game-xp-next").innerText = xpNeededForLevelUp;
-    document.getElementById("game-xp-needed").innerText = Math.max(0, xpNeededForLevelUp - xpInCurrentLevel);
+    document.getElementById("game-xp-next").innerText = xpForNextLevel;
+    document.getElementById("game-xp-needed").innerText = Math.max(0, xpForNextLevel - xpInCurrentLevel);
 
     // 水槽アクターの見た目の更新
     const actorEl = document.getElementById("fish-actor");
@@ -1503,17 +1844,618 @@ class TunatomoApp {
     historyEl.innerHTML = html;
   }
 
-  // レベルアップと経験値計算ロジック
+  // レベルアップと経験値計算ロジック (uses cumulative XP so spending pts doesn't lower level)
   awardXP(user, amount) {
-    // レベル判定: 100ポイント増えるごとにレベルアップ
+    user.totalXP = (user.totalXP || 0) + amount;
     const oldLevel = user.level || 1;
-    // 総獲得ポイントなどではなく、現在のポイントで簡易計算
-    const newLevel = Math.floor(user.points / 100) + 1;
-    
+    // XP required per level increases: level N needs N*100 cumulative XP
+    let newLevel = 1;
+    let xpNeeded = 100;
+    let xpAccum = 0;
+    while (user.totalXP >= xpAccum + xpNeeded) {
+      xpAccum += xpNeeded;
+      newLevel++;
+      xpNeeded = newLevel * 100;
+    }
     if (newLevel > oldLevel) {
       user.level = newLevel;
-      alert(`🎉 レベルアップしました！Lv.${oldLevel} → Lv.${newLevel}! お魚のボディカラーが新しくなりました！`);
+      alert(`🎉 Level Up! Lv.${oldLevel} → Lv.${newLevel}!\nレベルアップしました！お魚が成長しました！`);
     }
+  }
+
+  // 自動的チャットルーム確保
+  ensureChatRooms() {
+    this.state.bookings.forEach(b => {
+      if (b.status === "matched" || b.status === "completed") {
+        if (b.supporterId && b.studentId) {
+          const roomId = `chat_${b.supporterId}_${b.studentId}`;
+          const altRoomId = `chat_${b.studentId}_${b.supporterId}`;
+          const exists = this.state.chats.some(c => c.id === roomId || c.id === altRoomId);
+          if (!exists) {
+            this.state.chats.push({
+              id: roomId,
+              userIds: [b.supporterId, b.studentId],
+              messages: [
+                { id: "msg_auto_" + Date.now(), senderId: "system", senderName: "System", text: `同行サポート「${b.category}」がマッチングされました。チャットを開始してください。(Matching Completed for ${b.category}.)`, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }
+              ]
+            });
+          }
+        }
+      }
+    });
+    this.saveState();
+  }
+
+  // 13. ネイティブチャット画面の描画
+  renderChat() {
+    const user = this.state.currentUser;
+    if (!user) {
+      alert("チャットを利用するにはログインが必要です。");
+      window.location.hash = "#/login";
+      return;
+    }
+
+    this.ensureChatRooms();
+
+    const agreementEl = document.getElementById("chat-rules-agreement");
+    const activeConvEl = document.getElementById("chat-conversation-active");
+    const noSelectionEl = document.getElementById("chat-no-selection");
+
+    // 規約のチェック
+    if (!user.agreedToChatRules) {
+      agreementEl.style.display = "flex";
+      activeConvEl.style.display = "none";
+      noSelectionEl.style.display = "none";
+
+      const checkEl = document.getElementById("chat-rules-check");
+      const agreeBtn = document.getElementById("chat-agree-btn");
+
+      checkEl.checked = false;
+      agreeBtn.disabled = true;
+
+      checkEl.onchange = () => {
+        agreeBtn.disabled = !checkEl.checked;
+      };
+
+      agreeBtn.onclick = () => {
+        user.agreedToChatRules = true;
+        // ユーザーリストの中身も更新
+        const idx = this.state.users.findIndex(u => u.id === user.id);
+        if (idx !== -1) {
+          this.state.users[idx] = user;
+        }
+        this.saveState();
+        this.renderChat();
+      };
+      return;
+    }
+
+    // 同意済みの場合、チャット画面表示
+    agreementEl.style.display = "none";
+
+    // チャット相手（ルーム）の抽出
+    // 管理者の場合はすべてのチャットルーム。一般ユーザーは所属しているルームのみ。
+    const myRooms = this.state.chats.filter(room => user.role === "admin" || room.userIds.includes(user.id));
+    const roomsListEl = document.getElementById("chat-rooms-list");
+
+    if (myRooms.length === 0) {
+      roomsListEl.innerHTML = `<p class="text-muted" style="text-align:center; padding: 12px; font-size: 0.85rem;">進行中のチャットはありません。</p>`;
+      activeConvEl.style.display = "none";
+      noSelectionEl.style.display = "flex";
+    } else {
+      let roomsHtml = "";
+      myRooms.forEach(room => {
+        // 相手の名前とアバターを取得
+        let partnerName = "つなともユーザー";
+        let partnerAvatar = "images/Tuna1.jpg";
+        let partnerRole = "";
+        
+        // 相手のIDを特定
+        const partnerId = room.userIds.find(id => id !== user.id);
+        const partner = this.state.users.find(u => u.id === partnerId);
+        
+        if (partner) {
+          partnerName = partner.name;
+          partnerAvatar = partner.avatar || "images/Tuna1.jpg";
+          partnerRole = partner.role === "student_international" ? "国際学生" : partner.role === "student_japanese" ? "日本人学生" : "地域住民";
+        } else if (user.role === "admin") {
+          // 管理者が全部屋を見る場合、二人の参加者を明記
+          const user1 = this.state.users.find(u => u.id === room.userIds[0]);
+          const user2 = this.state.users.find(u => u.id === room.userIds[1]);
+          partnerName = `${user1 ? user1.name : room.userIds[0]} & ${user2 ? user2.name : room.userIds[1]}`;
+        }
+
+        const lastMsg = room.messages[room.messages.length - 1];
+        const lastText = lastMsg ? lastMsg.text : "";
+        const lastTime = lastMsg ? lastMsg.time : "";
+
+        const isActive = this.activeChatRoomId === room.id ? "active" : "";
+
+        roomsHtml += `
+          <div class="chat-room-item ${isActive}" data-id="${room.id}" style="display: flex; gap: 10px; padding: 10px; border-radius: var(--radius-sm); cursor: pointer; border-bottom: 1px solid var(--color-border); align-items: center; background: ${isActive ? 'var(--gradient-soft)' : 'transparent'};">
+            <img src="${partnerAvatar}" alt="${partnerName}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">
+            <div style="flex:1; min-width: 0;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight: 700; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${partnerName}</span>
+                <span style="font-size: 0.75rem; color: var(--color-text-muted);">${lastTime}</span>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--color-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top:2px;">${lastText}</p>
+            </div>
+          </div>
+        `;
+      });
+      roomsListEl.innerHTML = roomsHtml;
+
+      // 部屋クリックイベント
+      document.querySelectorAll(".chat-room-item").forEach(item => {
+        item.addEventListener("click", () => {
+          this.activeChatRoomId = item.getAttribute("data-id");
+          this.renderChat();
+        });
+      });
+    }
+
+    // トーク画面の描画
+    if (this.activeChatRoomId) {
+      const activeRoom = this.state.chats.find(r => r.id === this.activeChatRoomId);
+      if (activeRoom) {
+        activeConvEl.style.display = "flex";
+        noSelectionEl.style.display = "none";
+
+        // 相手の名前特定
+        let partnerName = "トーク相手";
+        let partnerId = activeRoom.userIds.find(id => id !== user.id);
+        let partner = this.state.users.find(u => u.id === partnerId);
+        if (partner) {
+          partnerName = partner.name;
+        } else if (user.role === "admin") {
+          const u1 = this.state.users.find(u => u.id === activeRoom.userIds[0]);
+          const u2 = this.state.users.find(u => u.id === activeRoom.userIds[1]);
+          partnerName = `${u1 ? u1.name : "ユーザー1"} & ${u2 ? u2.name : "ユーザー2"}`;
+        }
+        document.getElementById("chat-partner-name").innerText = partnerName;
+
+        // メッセージ描画
+        const msgContainer = document.getElementById("chat-messages-container");
+        let msgHtml = "";
+        activeRoom.messages.forEach(msg => {
+          if (msg.senderId === "system") {
+            msgHtml += `
+              <div style="text-align: center; margin: 8px 0;">
+                <span style="background: #e9ecef; color: var(--color-text-muted); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">${msg.text}</span>
+              </div>
+            `;
+          } else if (msg.senderId === user.id) {
+            // 送信メッセージ (自分)
+            msgHtml += `
+              <div class="chat-message sent" style="align-self: flex-end; display: flex; flex-direction: column; align-items: flex-end; max-width: 70%; margin-bottom: 8px;">
+                <div style="background: var(--color-primary); color: #fff; padding: 10px 16px; border-radius: 16px 16px 0 16px; font-size: 0.9rem; box-shadow: var(--shadow-sm);">${msg.text}</div>
+                <span style="font-size: 0.7rem; color: var(--color-text-muted); margin-top: 2px;">${msg.time}</span>
+              </div>
+            `;
+          } else {
+            // 受信メッセージ (相手)
+            let senderAvatar = "images/Tuna1.jpg";
+            let sender = this.state.users.find(u => u.id === msg.senderId);
+            if (sender) senderAvatar = sender.avatar || "images/Tuna1.jpg";
+
+            msgHtml += `
+              <div class="chat-message received" style="align-self: flex-start; display: flex; gap: 8px; max-width: 70%; margin-bottom: 8px;">
+                <img src="${senderAvatar}" alt="${msg.senderName}" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
+                <div style="display: flex; flex-direction: column;">
+                  <span style="font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 2px;">${msg.senderName}</span>
+                  <div style="background: #e9ecef; color: var(--color-text-dark); padding: 10px 16px; border-radius: 0 16px 16px 16px; font-size: 0.9rem; box-shadow: var(--shadow-sm);">${msg.text}</div>
+                  <span style="font-size: 0.7rem; color: var(--color-text-muted); margin-top: 2px;">${msg.time}</span>
+                </div>
+              </div>
+            `;
+          }
+        });
+        msgContainer.innerHTML = msgHtml;
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+
+        // メッセージ送信
+        const msgForm = document.getElementById("chat-message-form");
+        msgForm.onsubmit = (e) => {
+          e.preventDefault();
+          const inputEl = document.getElementById("chat-input-text");
+          const text = inputEl.value.trim();
+          if (!text) return;
+
+          // Check timeout
+          const now = Date.now();
+          if (user.timeoutUntil && user.timeoutUntil > now) {
+            const remaining = Math.ceil((user.timeoutUntil - now) / 1000);
+            alert(`⚠️ You are timed out for ${remaining} more second(s) due to a community rule violation.`);
+            inputEl.value = "";
+            return;
+          }
+
+          // Blacklist check
+          if (containsBlacklist(text)) {
+            // Warn user
+            alert("⚠️ Your message contains offensive language. This is a warning. Repeated violations may result in a ban.\n\nあなたのメッセージに不適切な言葉が含まれています。警告が発行されました。");
+            // 30-second timeout
+            user.timeoutUntil = Date.now() + 30000;
+            user.warnings = (user.warnings || 0) + 1;
+            // Update user in list
+            const uIdx = this.state.users.findIndex(u2 => u2.id === user.id);
+            if (uIdx !== -1) this.state.users[uIdx] = user;
+            // Notify admin
+            this.state.reports.unshift({
+              id: "report_auto_" + Date.now(),
+              reporterName: "⚠️ System (Auto)",
+              reportedName: user.name,
+              reason: `Blacklisted word used in chat (Warning #${user.warnings})`,
+              details: `Message: "${text}"  |  Chat room: ${this.activeChatRoomId}`,
+              chatRoomId: this.activeChatRoomId,
+              timestamp: new Date().toLocaleString()
+            });
+            this.saveState();
+            inputEl.value = "";
+            // Disable input for 30s
+            inputEl.disabled = true;
+            const submitBtn = msgForm.querySelector("button[type='submit']");
+            if (submitBtn) submitBtn.disabled = true;
+            setTimeout(() => {
+              inputEl.disabled = false;
+              if (submitBtn) submitBtn.disabled = false;
+              inputEl.placeholder = "You can chat again now.";
+            }, 30000);
+            return;
+          }
+
+          const newMsg = {
+            id: "msg_" + Date.now(),
+            senderId: user.id,
+            senderName: user.name,
+            text: text,
+            time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+          };
+          activeRoom.messages.push(newMsg);
+          inputEl.value = "";
+          this.saveState();
+          this.renderChat();
+
+          // 自動返信 (相手がサポーターや留学生の模擬ボットの場合)
+          if (partner && partner.id !== "admin") {
+            setTimeout(() => {
+              if (this.activeChatRoomId !== activeRoom.id) return;
+              let replyText = "メッセージありがとうございます！何か困ったことがあればいつでも聞いてくださいね。";
+              const lowerText = text.toLowerCase();
+              if (lowerText.includes("こんにちは") || lowerText.includes("hello") || lowerText.includes("hi")) {
+                replyText = `こんにちは！つなともへようこそ！日本での生活はいかがですか？何かお手伝いできることはありますか？`;
+              } else if (lowerText.includes("役所") || lowerText.includes("登録") || lowerText.includes("住民票") || lowerText.includes("保険") || lowerText.includes("city hall") || lowerText.includes("ward")) {
+                replyText = `役所での住民登録や国民健康保険の手続きですね！同行サポートの予約を申請していただければ、一緒に行って書類の記入などもお手伝いしますよ！`;
+              } else if (lowerText.includes("銀行") || lowerText.includes("口座") || lowerText.includes("ゆうちょ") || lowerText.includes("bank") || lowerText.includes("account")) {
+                replyText = `銀行口座の開設ですね！留学生には「ゆうちょ銀行」が一番作りやすくておすすめです。必要書類（在留カード、学生証など）を揃えて一緒に行きましょう！`;
+              } else if (lowerText.includes("携帯") || lowerText.includes("電話") || lowerText.includes("sim") || lowerText.includes("mobile")) {
+                replyText = `スマートフォンのSIMカード契約ですね！MobalやIIJmioなど、留学生向けの格安SIMがおすすめです。契約手続きの同行も可能ですよ！`;
+              } else if (lowerText.includes("ありがとう") || lowerText.includes("thank")) {
+                replyText = `どういたしまして！お役に立てて嬉しいです。他にも気になることがあれば、いつでも聞いてください。`;
+              }
+
+              const partnerMsg = {
+                id: "msg_reply_" + Date.now(),
+                senderId: partner.id,
+                senderName: partner.name,
+                text: replyText,
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+              };
+              activeRoom.messages.push(partnerMsg);
+              this.saveState();
+              this.renderChat();
+            }, 1500);
+          }
+        };
+
+        // 通報ボタン処理
+        const reportBtn = document.getElementById("chat-report-btn");
+        if (user.role === "admin") {
+          reportBtn.style.display = "none";
+        } else {
+          reportBtn.style.display = "block";
+          reportBtn.onclick = () => {
+            if (!partner) return;
+            const reason = prompt("通報理由を入力してください（ハラスメント、スパム、出会い目的等）:\nEnter the reason for report (harassment, spam, dating request):");
+            if (reason) {
+              const newReport = {
+                id: "report_" + Date.now(),
+                reporterName: user.name,
+                reportedName: partner.name,
+                reason: reason,
+                details: `チャットルーム ID: ${activeRoom.id} での発言`,
+                chatRoomId: activeRoom.id,
+                timestamp: new Date().toLocaleString()
+              };
+              this.state.reports.unshift(newReport);
+              this.saveState();
+              alert("通報が管理者に送信されました。ご協力ありがとうございます。");
+            }
+          };
+        }
+      }
+    } else {
+      activeConvEl.style.display = "none";
+      noSelectionEl.style.display = "flex";
+    }
+  }
+
+  // 14. 管理者ダッシュボードの描画
+  renderAdmin() {
+    const user = this.state.currentUser;
+    if (!user || user.role !== "admin") {
+      alert("管理者権限が必要です。");
+      window.location.hash = "#/home";
+      return;
+    }
+
+    // 1) 予約一覧テーブル
+    const bookingsTable = document.getElementById("admin-bookings-table-body");
+    let bookingsHtml = "";
+    this.state.bookings.forEach(b => {
+      const statusText = b.status === "pending" ? "承認待ち" : b.status === "matched" ? "マッチ完了" : "完了";
+      const statusClass = b.status === "pending" ? "status-pending" : b.status === "matched" ? "status-matched" : "status-completed";
+      
+      let assignBtn = "";
+      if (b.status === "pending") {
+        assignBtn = `<button class="btn btn-primary btn-sm assign-supporter-btn" data-id="${b.id}" style="padding: 2px 8px; font-size: 0.8rem; margin-right: 4px;">割り当て</button>`;
+      } else if (b.status === "matched") {
+        assignBtn = `<button class="btn btn-outline btn-sm admin-complete-booking-btn" data-id="${b.id}" style="padding: 2px 8px; font-size: 0.8rem; border-color: green; color: green; margin-right: 4px;">完了にする</button>`;
+      }
+
+      bookingsHtml += `
+        <tr style="border-bottom: 1px solid var(--color-border); padding: 12px 0;">
+          <td style="padding: 12px;">${b.id.substring(8, 14)}</td>
+          <td style="padding: 12px;">${b.studentName}</td>
+          <td style="padding: 12px;">${b.supporterName}</td>
+          <td style="padding: 12px;">${b.category}</td>
+          <td style="padding: 12px;">${b.date} ${b.time}</td>
+          <td style="padding: 12px;"><span class="booking-status ${statusClass}">${statusText}</span></td>
+          <td style="padding: 12px;">
+            ${assignBtn}
+            <button class="btn btn-outline btn-sm admin-delete-booking-btn" data-id="${b.id}" style="padding: 2px 8px; font-size: 0.8rem; border-color:#dc3545; color:#dc3545;">削除</button>
+          </td>
+        </tr>
+      `;
+    });
+    bookingsTable.innerHTML = bookingsHtml || `<tr><td colspan="7" style="text-align:center; padding:20px;">予約はありません。</td></tr>`;
+
+    // 予約ボタンイベントアタッチ
+    document.querySelectorAll(".assign-supporter-btn").forEach(btn => {
+      btn.onclick = () => {
+        const bid = btn.getAttribute("data-id");
+        // サポーター一覧を作成
+        const supporters = this.state.users.filter(u => u.role !== "student_international" && u.role !== "admin");
+        let listText = "サポーターの番号を入力してください:\n";
+        supporters.forEach((s, i) => {
+          listText += `${i + 1}. ${s.name} (${s.role === "student_japanese" ? "日本人学生" : "地域住民"})\n`;
+        });
+        const ans = prompt(listText);
+        const idx = parseInt(ans) - 1;
+        if (supporters[idx]) {
+          const b = this.state.bookings.find(bk => bk.id === bid);
+          b.supporterId = supporters[idx].id;
+          b.supporterName = supporters[idx].name;
+          b.status = "matched";
+          this.saveState();
+          alert(`${supporters[idx].name}を割り当てました！`);
+          this.renderAdmin();
+        }
+      };
+    });
+
+    document.querySelectorAll(".admin-complete-booking-btn").forEach(btn => {
+      btn.onclick = () => {
+        const bid = btn.getAttribute("data-id");
+        this.completeBooking(bid);
+        this.renderAdmin();
+      };
+    });
+
+    document.querySelectorAll(".admin-delete-booking-btn").forEach(btn => {
+      btn.onclick = () => {
+        const bid = btn.getAttribute("data-id");
+        if (confirm("本当にこの予約を削除しますか？")) {
+          this.state.bookings = this.state.bookings.filter(b => b.id !== bid);
+          this.saveState();
+          this.renderAdmin();
+        }
+      };
+    });
+
+    // 2) ユーザー一覧テーブル
+    const usersTable = document.getElementById("admin-users-table-body");
+    let usersHtml = "";
+    this.state.users.forEach(u => {
+      usersHtml += `
+        <tr style="border-bottom: 1px solid var(--color-border);">
+          <td style="padding: 12px; display:flex; gap: 8px; align-items:center;">
+            <img src="${u.avatar}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+            <span>${u.name}</span>
+          </td>
+          <td style="padding: 12px;">${u.email}</td>
+          <td style="padding: 12px;">${u.role}</td>
+          <td style="padding: 12px;"><strong>${u.points}</strong> pt</td>
+          <td style="padding: 12px;">
+            <button class="btn btn-outline btn-sm admin-edit-points-btn" data-id="${u.id}" style="padding: 2px 8px; font-size: 0.8rem; margin-right:4px;">Pt調整</button>
+            <button class="btn btn-outline btn-sm admin-delete-user-btn" data-id="${u.id}" style="padding: 2px 8px; font-size: 0.8rem; border-color:#dc3545; color:#dc3545;" ${u.role === 'admin' ? 'disabled' : ''}>削除</button>
+          </td>
+        </tr>
+      `;
+    });
+    usersTable.innerHTML = usersHtml;
+
+    // ユーザーアクションアタッチ
+    document.querySelectorAll(".admin-edit-points-btn").forEach(btn => {
+      btn.onclick = () => {
+        const uid = btn.getAttribute("data-id");
+        const targetUser = this.state.users.find(u => u.id === uid);
+        const pts = prompt(`現在のポイントは ${targetUser.points} pt です。新しいポイントを入力してください:`, targetUser.points);
+        if (pts !== null && !isNaN(pts)) {
+          targetUser.points = parseInt(pts);
+          this.saveState();
+          alert("ポイントを更新しました。");
+          this.renderAdmin();
+        }
+      };
+    });
+
+    document.querySelectorAll(".admin-delete-user-btn").forEach(btn => {
+      btn.onclick = () => {
+        const uid = btn.getAttribute("data-id");
+        if (confirm("本当にこのユーザーを削除しますか？")) {
+          this.state.users = this.state.users.filter(u => u.id !== uid);
+          this.saveState();
+          this.renderAdmin();
+        }
+      };
+    });
+
+    // 3) チャット監視 & 通報ログ
+    // (a) 通報ログ一覧の描画
+    const reportsContainer = document.getElementById("admin-reports-container");
+    let reportsHtml = "";
+    this.state.reports.forEach(r => {
+      reportsHtml += `
+        <div style="background:#fff; border: 1.5px solid #ffccd5; border-radius: var(--radius-sm); padding: 10px; display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; margin-bottom: 8px;">
+          <div>
+            <span style="color:#e63946; font-weight:700;">[通報]</span> 通報者: <strong>${r.reporterName}</strong> | 対象: <strong style="color:#e63946;">${r.reportedName}</strong><br>
+            理由: <span style="background:#ffe3e3; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">${r.reason}</span><br>
+            <span style="font-size:0.75rem; color:var(--color-text-muted);">${r.timestamp}</span>
+          </div>
+          <div style="display:flex; gap: 8px;">
+            <button class="btn btn-primary btn-sm view-reported-chat-btn" data-room-id="${r.chatRoomId}" style="padding: 4px 8px; font-size:0.75rem;">チャット確認</button>
+            <button class="btn btn-outline btn-sm delete-report-btn" data-id="${r.id}" style="padding: 4px 8px; font-size:0.75rem; border-color:#999; color:#999;">却下</button>
+          </div>
+        </div>
+      `;
+    });
+    reportsContainer.innerHTML = reportsHtml || `<p class="text-muted" style="text-align:center; padding:10px; margin: 0;">現在届いている通報はありません。</p>`;
+
+    document.querySelectorAll(".view-reported-chat-btn").forEach(btn => {
+      btn.onclick = () => {
+        const rid = btn.getAttribute("data-room-id");
+        this.selectAdminChatRoom(rid);
+      };
+    });
+
+    document.querySelectorAll(".delete-report-btn").forEach(btn => {
+      btn.onclick = () => {
+        const id = btn.getAttribute("data-id");
+        this.state.reports = this.state.reports.filter(r => r.id !== id);
+        this.saveState();
+        this.renderAdmin();
+      };
+    });
+
+    // (b) アクティブチャット一覧
+    const adminChatsList = document.getElementById("admin-chats-list");
+    let adminChatsHtml = "";
+    this.state.chats.forEach(room => {
+      const user1 = this.state.users.find(u => u.id === room.userIds[0]);
+      const user2 = this.state.users.find(u => u.id === room.userIds[1]);
+      const name = `${user1 ? user1.name : room.userIds[0]} & ${user2 ? user2.name : room.userIds[1]}`;
+      const lastMsg = room.messages[room.messages.length - 1];
+      const lastText = lastMsg ? lastMsg.text : "";
+
+      const isActive = this.activeAdminChatRoomId === room.id ? "active" : "";
+
+      adminChatsHtml += `
+        <div class="admin-chat-item ${isActive}" data-id="${room.id}" style="padding:10px; border-radius: var(--radius-sm); border: 1.5px solid var(--color-border); cursor:pointer; background: ${isActive ? 'var(--gradient-soft)' : 'transparent'}; margin-bottom: 8px;">
+          <div style="font-weight:700; font-size:0.85rem;">${name}</div>
+          <div style="font-size:0.75rem; color:var(--color-text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:4px;">${lastText}</div>
+        </div>
+      `;
+    });
+    adminChatsList.innerHTML = adminChatsHtml || `<p class="text-muted">進行中のチャットはありません。</p>`;
+
+    document.querySelectorAll(".admin-chat-item").forEach(item => {
+      item.onclick = () => {
+        const rid = item.getAttribute("data-id");
+        this.selectAdminChatRoom(rid);
+      };
+    });
+
+    // アクティブな監視チャット詳細
+    this.renderAdminChatDetail();
+  }
+
+  selectAdminChatRoom(roomId) {
+    this.activeAdminChatRoomId = roomId;
+    // チャット監視タブをアクティブにする
+    document.querySelectorAll(".admin-tab-btn").forEach(b => {
+      if (b.getAttribute("data-tab") === "chats") {
+        b.classList.add("btn-primary");
+        b.classList.remove("btn-outline");
+      } else {
+        b.classList.remove("btn-primary");
+        b.classList.add("btn-outline");
+      }
+    });
+    document.querySelectorAll(".admin-panel").forEach(panel => {
+      panel.style.display = "none";
+    });
+    document.getElementById("admin-panel-chats").style.display = "block";
+
+    this.renderAdmin();
+  }
+
+  renderAdminChatDetail() {
+    const detailPanel = document.getElementById("admin-chat-detail-panel");
+    if (!detailPanel) return;
+
+    if (!this.activeAdminChatRoomId) {
+      detailPanel.innerHTML = `
+        <p class="text-muted" style="text-align: center; margin-top: 100px;">
+          <span class="lang-ja">チャットルームを選択すると履歴が表示されます。</span>
+          <span class="lang-en">Select a chat room to view message log.</span>
+        </p>
+      `;
+      return;
+    }
+
+    const activeRoom = this.state.chats.find(r => r.id === this.activeAdminChatRoomId);
+    if (!activeRoom) {
+      detailPanel.innerHTML = `<p class="text-muted" style="text-align:center; padding:20px;">チャットルームが見つかりません。</p>`;
+      return;
+    }
+
+    const u1 = this.state.users.find(u => u.id === activeRoom.userIds[0]);
+    const u2 = this.state.users.find(u => u.id === activeRoom.userIds[1]);
+    const roomTitle = `${u1 ? u1.name : activeRoom.userIds[0]} & ${u2 ? u2.name : activeRoom.userIds[1]}`;
+
+    let msgHtml = `
+      <div style="border-bottom:1.5px solid var(--color-border); padding-bottom:8px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+        <strong style="font-size:0.95rem;">${roomTitle}</strong>
+        <span style="font-size:0.75rem; color:#dc3545; border:1px solid #dc3545; padding: 2px 8px; border-radius:12px; font-weight:700;">監査ログ (Audit View)</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+    `;
+
+    activeRoom.messages.forEach(msg => {
+      const isSystem = msg.senderId === "system";
+      if (isSystem) {
+        msgHtml += `
+          <div style="text-align:center;">
+            <span style="background:#e9ecef; color:var(--color-text-muted); padding:2px 8px; border-radius:10px; font-size:0.7rem;">${msg.text}</span>
+          </div>
+        `;
+      } else {
+        msgHtml += `
+          <div style="background:#fff; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 8px 12px; font-size:0.85rem; margin-bottom: 8px;">
+            <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.75rem; color:var(--color-text-muted); margin-bottom:4px;">
+              <span>${msg.senderName}</span>
+              <span>${msg.time}</span>
+            </div>
+            <div>${msg.text}</div>
+          </div>
+        `;
+      }
+    });
+
+    msgHtml += "</div>";
+    detailPanel.innerHTML = msgHtml;
   }
 }
 
