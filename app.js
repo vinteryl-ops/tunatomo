@@ -1635,11 +1635,19 @@ class TunatomoApp {
     });
 
     // Create event form submission
+    const EVENT_POST_COST = 100;
     const createForm = document.getElementById("form-create-event");
     if (createForm) {
       createForm.onsubmit = (e) => {
         e.preventDefault();
         if (!user) { window.location.hash = "#/login"; return; }
+
+        // Check fish points balance
+        if ((user.points || 0) < EVENT_POST_COST) {
+          alert(`🐟 You need ${EVENT_POST_COST} Fish Points to post an event.\nYou currently have ${user.points || 0} pts.\n\nEarn more by joining events, answering Q&A posts, and participating in the community!`);
+          return;
+        }
+
         const title    = document.getElementById("ev-title").value.trim();
         const date     = document.getElementById("ev-date").value;
         const location = document.getElementById("ev-location").value.trim();
@@ -1648,6 +1656,15 @@ class TunatomoApp {
         const desc     = document.getElementById("ev-desc").value.trim();
         const photoUrl = document.getElementById("ev-photo").value.trim() ||
                          "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=800";
+
+        // Deduct 100 fish points
+        user.points -= EVENT_POST_COST;
+        this.state.pointsHistory.unshift({
+          userId: user.id,
+          action: `🎉 イベント投稿: ${title}`,
+          points: -EVENT_POST_COST,
+          date: new Date().toLocaleDateString()
+        });
 
         const newEv = {
           id: "event_" + Date.now(),
@@ -1658,20 +1675,24 @@ class TunatomoApp {
         };
         this.state.events.unshift(newEv);
         this.awardXP(user, 20);
-        user.points += 20;
-        this.state.pointsHistory.unshift({ userId: user.id, action: `イベント作成: ${title}`, points: 20, date: new Date().toLocaleDateString() });
+
         const idx = this.state.users.findIndex(u => u.id === user.id);
         if (idx !== -1) this.state.users[idx] = user;
         this.saveState();
         createForm.reset();
         if (createFormEl) createFormEl.classList.remove("active");
-        alert(`Event "${title}" created! You earned 20 pts.`);
+        alert(`🎉 Event "${title}" posted!\n100 Fish Points spent. Keep participating to earn more!`);
         this.renderEvents();
       };
     }
 
-    // Toggle create form
+    // Toggle create form — show points balance on button
     if (createBtn) {
+      const pts = user ? (user.points || 0) : 0;
+      const canAfford = pts >= 100;
+      createBtn.innerHTML = canAfford
+        ? `＋ Create Event <span style="font-size:0.75rem;opacity:0.85;margin-left:6px;">(-100 🐟)</span>`
+        : `＋ Create Event <span style="font-size:0.75rem;opacity:0.75;margin-left:6px;">(need 100 🐟 · you have ${pts})</span>`;
       createBtn.onclick = () => {
         if (!user) { window.location.hash = "#/login"; return; }
         if (createFormEl) createFormEl.classList.toggle("active");
