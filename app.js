@@ -256,7 +256,20 @@ const SHOP_ITEMS = [
   { id: "nerd_glasses", name: "丸メガネ", category: "glasses", price: 50, previewClass: "preview-item-nerd-glasses" },
   { id: "scarf", name: "赤いマフラー", category: "clothing", price: 70, previewClass: "preview-item-scarf" },
   { id: "tie", name: "ネクタイ", category: "clothing", price: 50, previewClass: "preview-item-tie" },
-  { id: "kimono", name: "ミニ着物", category: "clothing", price: 250, previewClass: "preview-item-kimono" }
+  { id: "kimono", name: "ミニ着物", category: "clothing", price: 250, previewClass: "preview-item-kimono" },
+  // Digital Avatars — DiceBear SVG
+  { id: "avatar_robot",  name: "🤖 Robot Avatar",     category: "avatar", price: 200, previewClass: "preview-avatar-robot",  dicebearUrl: "https://api.dicebear.com/7.x/bottts-neutral/svg?seed=robot01&backgroundColor=b6e3f4" },
+  { id: "avatar_pixel",  name: "🎮 Pixel Art Avatar",  category: "avatar", price: 250, previewClass: "preview-avatar-pixel",  dicebearUrl: "https://api.dicebear.com/7.x/pixel-art-neutral/svg?seed=pixel01&backgroundColor=c0aede" },
+  { id: "avatar_anime",  name: "🌸 Anime Avatar",      category: "avatar", price: 350, previewClass: "preview-avatar-anime",  dicebearUrl: "https://api.dicebear.com/7.x/lorelei-neutral/svg?seed=lorelei01&backgroundColor=ffd5dc" },
+  { id: "avatar_fun",    name: "😎 Fun Emoji Avatar",  category: "avatar", price: 150, previewClass: "preview-avatar-fun",    dicebearUrl: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=fun01&backgroundColor=d1f4cc" },
+  { id: "avatar_glass",  name: "🌐 Glass Avatar",      category: "avatar", price: 300, previewClass: "preview-avatar-glass",  dicebearUrl: "https://api.dicebear.com/7.x/glass/svg?seed=glass01" },
+  // Profile Frames (CSS animated borders)
+  { id: "frame_rainbow", name: "🌈 Rainbow Frame",     category: "frame",  price: 400, previewClass: "preview-frame-rainbow", frameClass: "frame-rainbow" },
+  { id: "frame_golden",  name: "✨ Golden Frame",       category: "frame",  price: 600, previewClass: "preview-frame-golden",  frameClass: "frame-golden" },
+  { id: "frame_neon",    name: "💜 Neon Frame",         category: "frame",  price: 500, previewClass: "preview-frame-neon",    frameClass: "frame-neon" },
+  // Profile Effects
+  { id: "effect_sparkle", name: "✨ Sparkle Effect",   category: "effect", price: 500, previewClass: "preview-effect-sparkle", effectClass: "effect-sparkle" },
+  { id: "effect_holo",   name: "🌈 Holographic",       category: "effect", price: 800, previewClass: "preview-effect-holo",   effectClass: "effect-holo" }
 ];
 
 // 2. アプリケーション状態管理クラス
@@ -284,6 +297,8 @@ class TunatomoApp {
         this.state = JSON.parse(savedState);
         if (!this.state.chats) this.state.chats = [];
         if (!this.state.reports) this.state.reports = [];
+        if (!this.state.pointRequests) this.state.pointRequests = [];
+        if (!this.state.reviews) this.state.reviews = [];
         // Merge any new default events that aren't in saved state
         DEFAULT_EVENTS.forEach(def => {
           if (!this.state.events.find(e => e.id === def.id)) {
@@ -448,6 +463,8 @@ class TunatomoApp {
 
     this.state.events = DEFAULT_EVENTS;
     this.state.threads = DEFAULT_THREADS;
+    this.state.pointRequests = [];
+    this.state.reviews = [];
     
     // デモ用ポイント履歴
     this.state.pointsHistory = [
@@ -596,6 +613,9 @@ class TunatomoApp {
         break;
       case "admin":
         this.renderAdmin();
+        break;
+      case "ranking":
+        this.renderLeaderboard();
         break;
     }
   }
@@ -962,6 +982,7 @@ class TunatomoApp {
           panel.classList.remove("active");
         });
         document.getElementById(panelId).classList.add("active");
+        if (panelId === "panel-market") this.renderPointsMarket();
       });
     });
 
@@ -1409,6 +1430,13 @@ class TunatomoApp {
       if (user.role !== "student_international" && b.status === "matched") {
         actionBtn = `<button class="btn btn-primary btn-sm complete-booking-btn" data-id="${b.id}" style="align-self: flex-end; margin-top:8px;">サポート完了を報告</button>`;
       }
+      // 国際学生視点：完了済みかつ未レビューの場合、レビューボタンを表示
+      if (user.role === "student_international" && b.status === "completed" && !b.reviewed) {
+        const supUser = this.state.users.find(u => u.name === b.supporterName || u.id === b.supporterId);
+        if (supUser) {
+          actionBtn += `<button class="btn btn-outline btn-sm review-booking-btn" data-booking-id="${b.id}" data-reviewed-id="${supUser.id}" data-reviewed-name="${supUser.name}" style="margin-top:8px;color:#f59e0b;border-color:#f59e0b;">⭐ Leave a Review</button>`;
+        }
+      }
 
       html += `
         <div class="booking-item-card">
@@ -1436,6 +1464,12 @@ class TunatomoApp {
       btn.addEventListener("click", () => {
         const id = btn.getAttribute("data-id");
         this.completeBooking(id);
+      });
+    });
+    // Review buttons
+    document.querySelectorAll(".review-booking-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        this.openReviewModal(btn.dataset.bookingId, btn.dataset.reviewedId, btn.dataset.reviewedName);
       });
     });
   }
@@ -1545,6 +1579,7 @@ class TunatomoApp {
               <span class="uni">${sup.university || (isEn ? "Local Supporter" : "地域サポーター")}</span>
             </div>
           </div>
+          ${(() => { const r = this.getAverageRating(sup.id); return r ? `<div style="font-size:0.82rem;color:#f59e0b;margin-bottom:4px;">${"★".repeat(Math.round(r.avg))}${"☆".repeat(5-Math.round(r.avg))} <span style="color:var(--color-text-muted);">${r.avg} (${r.count} reviews)</span></div>` : ""; })()}
           <p class="supporter-bio">${sup.bio || (isEn ? "Happy to help you." : "よろしくお願いいたします。")}</p>
           <div class="supporter-tags">
             <div class="supporter-tag-row">
@@ -2070,44 +2105,112 @@ class TunatomoApp {
     this.renderHome(); // ホーム画面のお魚プレビューも更新
   }
 
-  renderShop() {
+  renderShop(activeTab) {
     const user = this.state.currentUser;
     const shopEl = document.getElementById("shop-grid");
     document.getElementById("shop-points-val").innerText = user.points;
+    if (!user.equippedItems) user.equippedItems = {};
 
-    // 未解放のアイテムのみ抽出
-    const availableItems = SHOP_ITEMS.filter(item => !user.unlockedItems.includes(item.id));
+    const CATS = [
+      { key: "costume", label: "🎭 Costumes" },
+      { key: "avatar",  label: "🎨 Avatars" },
+      { key: "frame",   label: "🖼 Frames" },
+      { key: "effect",  label: "✨ Effects" },
+    ];
+    const tab = activeTab || user._shopTab || "costume";
+    user._shopTab = tab;
 
-    if (availableItems.length === 0) {
-      shopEl.innerHTML = `<p class="text-muted" style="grid-column: 1/-1; text-align:center; padding: 20px;">すべてのコスチュームを解放済みです！</p>`;
-      return;
-    }
+    // Tab bar
+    const tabBar = document.getElementById("shop-tab-bar") || (() => {
+      const el = document.createElement("div");
+      el.id = "shop-tab-bar";
+      el.style.cssText = "display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;";
+      shopEl.parentElement.insertBefore(el, shopEl);
+      return el;
+    })();
+    tabBar.innerHTML = CATS.map(c => `
+      <button class="btn ${tab === c.key ? "btn-primary" : "btn-outline"} btn-sm shop-tab-btn" data-cat="${c.key}" style="font-size:0.82rem;">${c.label}</button>
+    `).join("");
+    tabBar.querySelectorAll(".shop-tab-btn").forEach(b => b.onclick = () => this.renderShop(b.dataset.cat));
+
+    const items = SHOP_ITEMS.filter(i => (i.category || "costume") === tab);
+    if (!items.length) { shopEl.innerHTML = `<p class="text-muted" style="grid-column:1/-1;text-align:center;padding:20px;">No items in this category yet.</p>`; return; }
 
     let html = "";
-    availableItems.forEach(item => {
-      const canBuy = user.points >= item.price;
-      const btnDisabled = !canBuy ? "disabled" : "";
-      
+    items.forEach(item => {
+      const owned   = user.unlockedItems.includes(item.id);
+      const canBuy  = user.points >= item.price;
+      const equippedFrame  = user.equippedItems.frame  === item.id;
+      const equippedEffect = user.equippedItems.effect === item.id;
+      const equippedAvatar = user.equippedItems.avatar === item.id;
+
+      let previewContent = "";
+      if (item.dicebearUrl) {
+        previewContent = `<img src="${item.dicebearUrl}" alt="${item.name}" style="width:64px;height:64px;border-radius:50%;">`;
+      } else {
+        previewContent = `<div class="${item.previewClass || ""}" style="width:64px;height:64px;border-radius:50%;background:var(--color-bg-secondary);"></div>`;
+      }
+
+      let actionBtn = "";
+      if (!owned) {
+        actionBtn = `<button class="btn btn-primary btn-sm buy-btn" data-id="${item.id}" data-price="${item.price}" ${canBuy ? "" : "disabled"}>🐟 ${item.price} pts</button>`;
+      } else if (item.category === "avatar") {
+        actionBtn = equippedAvatar
+          ? `<button class="btn btn-outline btn-sm equip-btn" data-id="${item.id}" data-cat="avatar" style="border-color:#dc3545;color:#dc3545;">Unequip</button>`
+          : `<button class="btn btn-primary btn-sm equip-btn" data-id="${item.id}" data-cat="avatar">Equip</button>`;
+      } else if (item.category === "frame") {
+        actionBtn = equippedFrame
+          ? `<button class="btn btn-outline btn-sm equip-btn" data-id="${item.id}" data-cat="frame" style="border-color:#dc3545;color:#dc3545;">Unequip</button>`
+          : `<button class="btn btn-primary btn-sm equip-btn" data-id="${item.id}" data-cat="frame">Equip</button>`;
+      } else if (item.category === "effect") {
+        actionBtn = equippedEffect
+          ? `<button class="btn btn-outline btn-sm equip-btn" data-id="${item.id}" data-cat="effect" style="border-color:#dc3545;color:#dc3545;">Unequip</button>`
+          : `<button class="btn btn-primary btn-sm equip-btn" data-id="${item.id}" data-cat="effect">Equip</button>`;
+      } else {
+        actionBtn = `<span style="font-size:0.75rem;color:#16a34a;font-weight:600;">✅ Owned</span>`;
+      }
+
       html += `
-        <div class="item-card">
-          <div class="item-card-preview">
-            <div class="${item.previewClass}"></div>
-          </div>
-          <h4>${item.name}</h4>
-          <span class="price">${item.price} pt</span>
-          <button class="btn btn-primary btn-sm buy-btn" data-id="${item.id}" data-price="${item.price}" ${btnDisabled}>解放する</button>
-        </div>
-      `;
+        <div class="item-card" style="position:relative;">
+          ${owned ? `<span style="position:absolute;top:8px;right:8px;font-size:0.7rem;background:#d1fae5;color:#065f46;padding:2px 7px;border-radius:10px;">Owned</span>` : ""}
+          <div class="item-card-preview">${previewContent}</div>
+          <h4 style="font-size:0.9rem;margin:8px 0 4px;">${item.name}</h4>
+          ${actionBtn}
+        </div>`;
     });
     shopEl.innerHTML = html;
 
-    // 解放（購入）ボタンイベント
-    document.querySelectorAll(".buy-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-id");
-        const price = parseInt(btn.getAttribute("data-price"));
-        this.unlockItem(id, price);
-      });
+    // Buy
+    shopEl.querySelectorAll(".buy-btn").forEach(btn => {
+      btn.onclick = () => this.unlockItem(btn.dataset.id, parseInt(btn.dataset.price));
+    });
+
+    // Equip / Unequip
+    shopEl.querySelectorAll(".equip-btn").forEach(btn => {
+      btn.onclick = () => {
+        const item = SHOP_ITEMS.find(i => i.id === btn.dataset.id);
+        if (!item) return;
+        const cat = btn.dataset.cat;
+        if (user.equippedItems[cat] === item.id) {
+          // Unequip
+          delete user.equippedItems[cat];
+          if (cat === "avatar" && user._originalAvatar) {
+            user.avatar = user._originalAvatar;
+            delete user._originalAvatar;
+          }
+        } else {
+          // Equip
+          if (cat === "avatar") {
+            if (!user._originalAvatar) user._originalAvatar = user.avatar;
+            user.avatar = item.dicebearUrl;
+          }
+          user.equippedItems[cat] = item.id;
+        }
+        const idx = this.state.users.findIndex(u => u.id === user.id);
+        if (idx !== -1) this.state.users[idx] = user;
+        this.saveState();
+        this.renderShop(tab);
+      };
     });
   }
 
@@ -2853,6 +2956,262 @@ function initOnboarding(app, user) {
     window.location.hash = "#/profile";
   };
 }
+
+// ============================================================
+//  LEADERBOARD
+// ============================================================
+TunatomoApp.prototype.renderLeaderboard = function() {
+  const listEl = document.getElementById("ranking-list");
+  const guideEl = document.getElementById("ranking-tier-guide");
+  const searchEl = document.getElementById("ranking-search");
+  if (!listEl) return;
+
+  const me = this.state.currentUser;
+  const filter = searchEl ? searchEl.value.toLowerCase() : "";
+
+  const sorted = [...this.state.users]
+    .filter(u => u.role !== "admin")
+    .sort((a, b) => ((b.totalXP || b.points || 0) - (a.totalXP || a.points || 0)));
+
+  const medals = ["🥇", "🥈", "🥉"];
+
+  let html = "";
+  sorted.forEach((u, i) => {
+    if (filter && !u.name.toLowerCase().includes(filter)) return;
+    const xp = u.totalXP || u.points || 0;
+    const t = getTier(u);
+    const roleText = u.role === "student_international" ? "International" : u.role === "student_japanese" ? "Japanese Supporter" : "Local Resident";
+    const roleClass = u.role === "student_international" ? "badge-student-intl" : u.role === "student_japanese" ? "badge-student-jp" : "badge-resident";
+    const isMe = me && u.id === me.id;
+    html += `
+      <div class="ranking-row${isMe ? " is-me" : ""}">
+        <span class="ranking-rank">${i < 3 ? medals[i] : `#${i + 1}`}</span>
+        <img class="ranking-avatar" src="${u.avatar || 'images/Tuna1.jpg'}" alt="${u.name}">
+        <div class="ranking-name">${u.name}${isMe ? " <span style='font-size:0.75rem;color:var(--color-primary);'>(You)</span>" : ""}</div>
+        <span class="tier-badge ${t.css}" style="padding:3px 10px;font-size:0.7rem;">${t.emoji} ${t.name}</span>
+        <span class="badge ${roleClass}" style="font-size:0.7rem;">${roleText}</span>
+        <span class="ranking-xp">Lv.${u.level || 1} · ${xp} XP</span>
+      </div>`;
+  });
+  listEl.innerHTML = html || `<p class="text-muted" style="padding:20px;text-align:center;">No results found.</p>`;
+
+  // Tier guide
+  if (guideEl) {
+    guideEl.innerHTML = TIERS.slice().reverse().map(t => `
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--color-border);">
+        <span class="tier-badge ${t.css}" style="padding:6px 16px;font-size:0.9rem;min-width:130px;text-align:center;">${t.emoji} ${t.name}</span>
+        <span style="font-size:0.85rem;color:var(--color-text-muted);">${t.min === 0 ? "0 – 199 XP (Starter)" : t.min === 200 ? "200 – 499 XP" : t.min === 500 ? "500 – 999 XP" : "1000+ XP (Max Tier)"}</span>
+      </div>`).join("");
+  }
+
+  // Live search
+  if (searchEl) searchEl.oninput = () => this.renderLeaderboard();
+};
+
+// ============================================================
+//  POINTS MARKET (send / request)
+// ============================================================
+TunatomoApp.prototype.renderPointsMarket = function() {
+  const el = document.getElementById("panel-market");
+  if (!el) return;
+  const user = this.state.currentUser;
+  if (!user) { el.innerHTML = `<p class="text-muted" style="text-align:center;padding:20px;">Please sign in.</p>`; return; }
+
+  const othersOptions = this.state.users
+    .filter(u => u.id !== user.id && u.role !== "admin")
+    .map(u => `<option value="${u.id}">${u.name}</option>`).join("");
+
+  const pendingForMe = (this.state.pointRequests || []).filter(r => r.toId === user.id && r.status === "pending");
+  const mySent      = (this.state.pointRequests || []).filter(r => r.fromId === user.id && r.status === "pending");
+
+  const pendingHtml = pendingForMe.length ? pendingForMe.map(r => `
+    <div class="pending-request-card">
+      <div>
+        <strong>${r.fromName}</strong> requests <strong>${r.amount} 🐟</strong>
+        ${r.message ? `<br><span style="font-size:0.8rem;color:var(--color-text-muted);">"${r.message}"</span>` : ""}
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary btn-sm accept-req-btn" data-id="${r.id}">Accept</button>
+        <button class="btn btn-outline btn-sm decline-req-btn" data-id="${r.id}" style="border-color:#dc3545;color:#dc3545;">Decline</button>
+      </div>
+    </div>`).join("") : `<p class="text-muted" style="font-size:0.85rem;">No pending requests.</p>`;
+
+  const sentHtml = mySent.length ? mySent.map(r => `
+    <div class="pending-request-card" style="background:#f0fdf4;">
+      <div>Waiting for <strong>${r.toName}</strong> · <strong>${r.amount} 🐟</strong></div>
+      <span style="font-size:0.75rem;color:var(--color-text-muted);">Pending</span>
+    </div>`).join("") : `<p class="text-muted" style="font-size:0.85rem;">No sent requests.</p>`;
+
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+      <!-- Send Points -->
+      <div class="market-section">
+        <h3>💸 Send Points</h3>
+        <p style="font-size:0.82rem;color:var(--color-text-muted);margin-bottom:12px;">Your balance: <strong>${user.points} 🐟</strong> · Min transfer: 100 pts</p>
+        <div class="form-group"><label>To</label><select id="send-to-user">${othersOptions}</select></div>
+        <div class="form-group"><label>Amount</label><input type="number" id="send-amount" min="100" max="${user.points}" placeholder="e.g. 100"></div>
+        <div class="form-group"><label>Message (optional)</label><input type="text" id="send-message" placeholder="Thanks for your help!"></div>
+        <button class="btn btn-primary btn-block" id="send-pts-btn">Send Points 💸</button>
+      </div>
+      <!-- Request Points -->
+      <div class="market-section">
+        <h3>🙏 Request Points</h3>
+        <p style="font-size:0.82rem;color:var(--color-text-muted);margin-bottom:12px;">Ask another user to send you points.</p>
+        <div class="form-group"><label>From</label><select id="req-from-user">${othersOptions}</select></div>
+        <div class="form-group"><label>Amount</label><input type="number" id="req-amount" min="100" placeholder="e.g. 100"></div>
+        <div class="form-group"><label>Reason (optional)</label><input type="text" id="req-message" placeholder="For helping with my move!"></div>
+        <button class="btn btn-outline btn-block" id="req-pts-btn">Request Points 🙏</button>
+      </div>
+    </div>
+    <!-- Incoming Requests -->
+    <div class="market-section">
+      <h3>📬 Requests For You</h3>
+      ${pendingHtml}
+    </div>
+    <!-- Sent Requests -->
+    <div class="market-section">
+      <h3>📤 Your Sent Requests</h3>
+      ${sentHtml}
+    </div>`;
+
+  // Send
+  document.getElementById("send-pts-btn").onclick = () => {
+    const toId  = document.getElementById("send-to-user").value;
+    const amt   = parseInt(document.getElementById("send-amount").value);
+    const msg   = document.getElementById("send-message").value.trim();
+    if (!toId) { alert("Please select a user."); return; }
+    if (!amt || amt < 100) { alert("Minimum transfer is 100 🐟 Fish Points."); return; }
+    if (user.points < amt) { alert(`Not enough points. You have ${user.points} 🐟.`); return; }
+    const toUser = this.state.users.find(u => u.id === toId);
+    if (!toUser) return;
+    user.points -= amt;
+    toUser.points += amt;
+    this.state.pointsHistory.unshift({ userId: user.id, action: `💸 Sent to ${toUser.name}`, points: -amt, date: new Date().toLocaleDateString() });
+    this.state.pointsHistory.unshift({ userId: toUser.id, action: `💸 Received from ${user.name}${msg ? ` — "${msg}"` : ""}`, points: amt, date: new Date().toLocaleDateString() });
+    const uIdx = this.state.users.findIndex(u => u.id === user.id);
+    const tIdx = this.state.users.findIndex(u => u.id === toId);
+    if (uIdx !== -1) this.state.users[uIdx] = user;
+    if (tIdx !== -1) this.state.users[tIdx] = toUser;
+    this.saveState();
+    alert(`✅ Sent ${amt} 🐟 to ${toUser.name}!`);
+    this.renderPointsMarket();
+  };
+
+  // Request
+  document.getElementById("req-pts-btn").onclick = () => {
+    const fromId = document.getElementById("req-from-user").value;
+    const amt    = parseInt(document.getElementById("req-amount").value);
+    const msg    = document.getElementById("req-message").value.trim();
+    if (!fromId) { alert("Please select a user."); return; }
+    if (!amt || amt < 100) { alert("Minimum request is 100 🐟 Fish Points."); return; }
+    const fromUser = this.state.users.find(u => u.id === fromId);
+    if (!fromUser) return;
+    const req = { id: "req_" + Date.now(), fromId: user.id, fromName: user.name, toId: fromId, toName: fromUser.name, amount: amt, message: msg, status: "pending", date: new Date().toLocaleDateString() };
+    this.state.pointRequests.push(req);
+    this.saveState();
+    alert(`📤 Request sent to ${fromUser.name} for ${amt} 🐟!`);
+    this.renderPointsMarket();
+  };
+
+  // Accept / Decline
+  el.querySelectorAll(".accept-req-btn").forEach(btn => {
+    btn.onclick = () => {
+      const req = this.state.pointRequests.find(r => r.id === btn.dataset.id);
+      if (!req) return;
+      const requester = this.state.users.find(u => u.id === req.fromId);
+      if (!requester) return;
+      if (user.points < req.amount) { alert(`You don't have enough points to send ${req.amount} 🐟.`); return; }
+      user.points -= req.amount;
+      requester.points += req.amount;
+      req.status = "accepted";
+      this.state.pointsHistory.unshift({ userId: user.id, action: `💸 Sent to ${requester.name} (request)`, points: -req.amount, date: new Date().toLocaleDateString() });
+      this.state.pointsHistory.unshift({ userId: requester.id, action: `💸 Received from ${user.name} (request)`, points: req.amount, date: new Date().toLocaleDateString() });
+      const uIdx = this.state.users.findIndex(u => u.id === user.id);
+      const rIdx = this.state.users.findIndex(u => u.id === requester.id);
+      if (uIdx !== -1) this.state.users[uIdx] = user;
+      if (rIdx !== -1) this.state.users[rIdx] = requester;
+      this.saveState();
+      alert(`✅ Sent ${req.amount} 🐟 to ${requester.name}!`);
+      this.renderPointsMarket();
+    };
+  });
+  el.querySelectorAll(".decline-req-btn").forEach(btn => {
+    btn.onclick = () => {
+      const req = this.state.pointRequests.find(r => r.id === btn.dataset.id);
+      if (req) { req.status = "declined"; this.saveState(); this.renderPointsMarket(); }
+    };
+  });
+};
+
+// ============================================================
+//  RATINGS & REVIEWS
+// ============================================================
+TunatomoApp.prototype.getAverageRating = function(userId) {
+  const reviews = (this.state.reviews || []).filter(r => r.reviewedId === userId);
+  if (!reviews.length) return null;
+  const avg = reviews.reduce((s, r) => s + r.stars, 0) / reviews.length;
+  return { avg: Math.round(avg * 10) / 10, count: reviews.length };
+};
+
+TunatomoApp.prototype.starsHTML = function(rating, interactive = false) {
+  let html = "";
+  for (let i = 1; i <= 5; i++) {
+    const filled = i <= Math.round(rating);
+    html += interactive
+      ? `<span class="star${filled ? " active" : ""}" data-star="${i}" style="cursor:pointer;font-size:1.6rem;">${filled ? "⭐" : "☆"}</span>`
+      : `<span style="color:${filled ? "#f59e0b" : "#d1d5db"};">${filled ? "★" : "☆"}</span>`;
+  }
+  return html;
+};
+
+TunatomoApp.prototype.openReviewModal = function(bookingId, reviewedId, reviewedName) {
+  const modal = document.getElementById("review-modal");
+  if (!modal) return;
+  document.getElementById("review-modal-supporter-name").textContent = `Reviewing: ${reviewedName}`;
+  document.getElementById("review-booking-id").value = bookingId;
+  document.getElementById("review-reviewed-id").value = reviewedId;
+  document.getElementById("review-text").value = "";
+  document.getElementById("review-anonymous").checked = false;
+  // Reset stars
+  let selectedStar = 0;
+  const stars = document.querySelectorAll("#star-rating-input .star");
+  const refreshStars = () => stars.forEach((s, i) => { s.textContent = i < selectedStar ? "⭐" : "☆"; });
+  stars.forEach(s => {
+    s.onclick = () => { selectedStar = parseInt(s.dataset.star); refreshStars(); };
+    s.onmouseenter = () => stars.forEach((ss, i) => { ss.textContent = i < parseInt(s.dataset.star) ? "⭐" : "☆"; });
+    s.onmouseleave = () => refreshStars();
+  });
+  document.getElementById("submit-review-btn").onclick = () => {
+    if (!selectedStar) { alert("Please select a star rating."); return; }
+    const text = document.getElementById("review-text").value.trim();
+    const anon = document.getElementById("review-anonymous").checked;
+    const user = this.state.currentUser;
+    const review = {
+      id: "rev_" + Date.now(),
+      bookingId,
+      reviewerId: user.id,
+      reviewerName: anon ? "Anonymous 🎭" : user.name,
+      reviewedId,
+      reviewedName,
+      stars: selectedStar,
+      text,
+      anonymous: anon,
+      date: new Date().toLocaleDateString()
+    };
+    if (!this.state.reviews) this.state.reviews = [];
+    this.state.reviews.unshift(review);
+    // Mark booking as reviewed
+    const bk = this.state.bookings.find(b => b.id === bookingId);
+    if (bk) bk.reviewed = true;
+    this.saveState();
+    modal.style.display = "none";
+    alert("⭐ Review submitted! Thank you.");
+    this.renderProfile();
+  };
+  document.getElementById("close-review-modal").onclick = () => { modal.style.display = "none"; };
+  modal.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
+  modal.style.display = "flex";
+};
 
 // 起動
 document.addEventListener("DOMContentLoaded", () => {
