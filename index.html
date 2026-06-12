@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>つなとも - 国際学生・地域共生マッチングプラットフォーム</title>
+  <!-- Google Fonts: Outfit & Noto Sans JP -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- アプリケーション・シェル -->
+  <div id="app">
+    
+    <!-- グローバルヘッダー -->
+    <header class="global-header">
+      <div class="header-container">
+        <!-- ロゴ (2匹の魚のSVG) -->
+        <a href="#/home" class="logo-area">
+          <div class="logo-icon">
+            <svg viewBox="0 0 100 100" width="48" height="48">
+              <!-- 水滴/泡の背景 -->
+              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(0, 163, 255, 0.2)" stroke-width="2"/>
+              <!-- 青い魚 -->
+              <path d="M 30,50 C 40,35 60,35 70,50 C 60,65 40,65 30,50 Z" fill="#0D6EFD"/>
+              <path d="M 70,50 L 80,42 L 77,50 L 80,58 Z" fill="#0D6EFD"/>
+              <circle cx="42" cy="47" r="2" fill="#fff"/>
+              <!-- 水色の魚 (回転させて交差させる) -->
+              <g transform="rotate(45, 50, 50)">
+                <path d="M 30,50 C 40,35 60,35 70,50 C 60,65 40,65 30,50 Z" fill="#00A3FF" opacity="0.9"/>
+                <path d="M 70,50 L 80,42 L 77,50 L 80,58 Z" fill="#00A3FF" opacity="0.9"/>
+                <circle cx="42" cy="47" r="2" fill="#fff"/>
+              </g>
+            </svg>
+          </div>
+          <div class="logo-text">
+            <span class="logo-title">つなとも</span>
+            <span class="logo-subtitle">Tunatomo</span>
+          </div>
+        </a>
+
+        <!-- デスクトップ用ナビゲーション -->
+        <nav class="desktop-nav">
+          <a href="#/home" class="nav-link active" data-page="home">ホーム</a>
+          <a href="#/matching" class="nav-link" data-page="matching">サポーターを探す</a>
+          <a href="#/booking" class="nav-link" data-page="booking">支援同行予約</a>
+          <a href="#/events" class="nav-link" data-page="events">地域交流</a>
+          <a href="#/board" class="nav-link" data-page="board">相談掲示板</a>
+          <a href="#/info" class="nav-link" data-page="info">お役立ち情報</a>
+        </nav>
+
+        <!-- ユーザープロフィール・ステータスエリア -->
+        <div class="user-status-area" id="header-user-status">
+          <!-- JSで動的にログイン/ログアウトUIを挿入 -->
+          <a href="#/login" class="btn btn-primary btn-sm login-btn">ログイン / 登録</a>
+        </div>
+
+        <!-- モバイルメニューボタン -->
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="メニューを開く">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <!-- モバイル用ナビゲーションドロワー -->
+      <nav class="mobile-nav" id="mobile-nav">
+        <a href="#/home" class="mobile-nav-link" data-page="home">ホーム</a>
+        <a href="#/matching" class="mobile-nav-link" data-page="matching">サポーターを探す</a>
+        <a href="#/booking" class="mobile-nav-link" data-page="booking">支援同行予約</a>
+        <a href="#/events" class="mobile-nav-link" data-page="events">地域交流</a>
+        <a href="#/board" class="mobile-nav-link" data-page="board">相談掲示板</a>
+        <a href="#/info" class="mobile-nav-link" data-page="info">お役立ち情報</a>
+        <div class="mobile-nav-user" id="mobile-nav-user">
+          <!-- JSで動的にユーザー用ショートカットを挿入 -->
+        </div>
+      </nav>
+    </header>
+
+    <!-- メインコンテンツ領域 (SPAによって表示を切り替え) -->
+    <main id="main-content" class="main-content">
+      
+      <!-- ============================================== -->
+      <!-- 1. ホームビュー (#/home) -->
+      <!-- ============================================== -->
+      <section id="view-home" class="app-view active">
+        <!-- ヒーローセクション -->
+        <div class="hero-section">
+          <div class="hero-slider">
+            <div class="slide-item" style="background-image: linear-gradient(rgba(13, 110, 253, 0.4), rgba(0, 0, 0, 0.6)), url('images/img_slider_pc_20.jpg');">
+              <div class="slide-content">
+                <span class="hero-badge">多文化共生プラットフォーム</span>
+                <h1 class="hero-title">日本での新しい生活を、仲間と共に。</h1>
+                <p class="hero-description">「つなとも」は、日本に住む国際学生と、日本人学生や地域住民がつながり、支え合うためのマッチング・コミュニティサービスです。</p>
+                <div class="hero-actions">
+                  <a href="#/matching" class="btn btn-light btn-lg">サポーターを探す</a>
+                  <a href="#/booking" class="btn btn-primary btn-lg">同行サポートを予約</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-container">
+          <!-- クイックアクションリンク -->
+          <div class="quick-grid">
+            <a href="#/booking" class="quick-card card-booking">
+              <div class="quick-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div class="quick-card-body">
+                <h3>同行予約</h3>
+                <p>役所手続きや口座開設などの同行サポートを予約できます。</p>
+              </div>
+            </a>
+            <a href="#/board" class="quick-card card-board">
+              <div class="quick-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <div class="quick-card-body">
+                <h3>相談掲示板</h3>
+                <p>日々の困りごとや質問を投稿して、みんなに相談できます。</p>
+              </div>
+            </a>
+            <a href="#/events" class="quick-card card-events">
+              <div class="quick-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="quick-card-body">
+                <h3>地域交流</h3>
+                <p>交流イベントに参加して、他の学生や地域住民と仲良くなろう！</p>
+              </div>
+            </a>
+            <a href="#/info" class="quick-card card-info">
+              <div class="quick-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              </div>
+              <div class="quick-card-body">
+                <h3>お役立ち情報</h3>
+                <p>役所手続き、SIM契約、国民健康保険など各種ガイドを提供。</p>
+              </div>
+            </a>
+          </div>
+
+          <!-- 魚育成の簡易プレビュー -->
+          <div class="home-fish-banner card glass-card" id="home-fish-banner-container">
+            <!-- JSで動的に表示内容を変更（ログイン時のみ魚を表示） -->
+            <div class="fish-banner-left">
+              <div class="section-title-badge">魚育成 & コスチューム</div>
+              <h2>活動してあなたの「お魚」を成長させよう！</h2>
+              <p>サポートへの参加、イベントの出席、相談への回答など、サイト内での活動でポイントを獲得できます。ポイントを集めると、可愛い帽子やアクセサリーなどのコスチュームを解放できます！</p>
+              <div class="btn-group">
+                <a href="#/game" class="btn btn-primary">マイフィッシュを見る</a>
+              </div>
+            </div>
+            <div class="fish-banner-right">
+              <div class="aquarium-preview">
+                <div class="bubbles">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="floating-fish-wrapper" id="home-floating-fish">
+                  <!-- JSでユーザーの魚と装備を動的に描画 -->
+                  <svg class="preview-fish" viewBox="0 0 100 100" width="100" height="100">
+                    <path d="M 20,50 C 35,30 65,30 80,50 C 65,70 35,70 20,50 Z" fill="#0D6EFD"/>
+                    <path d="M 20,50 L 5,38 L 10,50 L 5,62 Z" fill="#0D6EFD"/>
+                    <circle cx="68" cy="45" r="4" fill="#fff"/><circle cx="70" cy="45" r="2" fill="#000"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- メインセクション：お知らせとイベント -->
+          <div class="home-grid">
+            <div class="home-column-main">
+              <div class="section-header">
+                <h2>最新のお知らせ</h2>
+              </div>
+              <div class="announcements-list" id="home-announcements">
+                <!-- JSで動的に表示 -->
+              </div>
+            </div>
+            
+            <div class="home-column-side">
+              <div class="section-header">
+                <h2>おすすめイベント</h2>
+                <a href="#/events" class="link-more">すべて見る →</a>
+              </div>
+              <div class="events-side-list" id="home-events-side">
+                <!-- JSで動的に表示 -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 公式LINEアピールセクション -->
+          <div class="line-promo-section card">
+            <div class="line-promo-content">
+              <span class="line-tag">公式LINEで相談</span>
+              <h2>困ったときは、いつでもLINEで気軽にご相談ください！</h2>
+              <p>つなとも事務局とサポートスタッフが、生活の些細な質問や急な困りごとにLINEでお答えします。下のQRコードを読み取るか、URLから友だち追加してください。</p>
+              <a href="https://line.me/R/ti/p/mock" target="_blank" rel="noopener noreferrer" class="btn btn-line btn-lg">
+                <span class="btn-icon">💬</span> LINE友だち追加はこちら
+              </a>
+            </div>
+            <div class="line-promo-qr">
+              <div class="qr-box">
+                <!-- SVGによる美しいモックQRコード -->
+                <svg width="120" height="120" viewBox="0 0 100 100" fill="#06C755">
+                  <path d="M0,0h30v30h-30z M10,10h10v10h-10z M70,0h30v30h-30z M80,10h10v10h-10z M0,70h30v30h-30z M10,80h10v10h-10z M40,10h10v10h-10z M50,20h10v10h-10z M30,40h10v10h-10z M40,50h10v10h-10z M50,40h10v10h-10z M70,40h10v10h-10z M80,50h10v10h-10z M60,60h10v10h-10z M70,70h10v10h-10z M90,80h10v20h-20z M40,80h10v10h-10z M50,90h10v10h-10z" />
+                </svg>
+                <span>つなとも公式LINE</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 2. ログイン・登録ビュー (#/login) -->
+      <!-- ============================================== -->
+      <section id="view-login" class="app-view">
+        <div class="auth-container card glass-card">
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="tab-login-btn">ログイン</button>
+            <button class="auth-tab" id="tab-signup-btn">新規アカウント作成</button>
+          </div>
+
+          <!-- ログインフォーム -->
+          <form id="form-login" class="auth-form active">
+            <div class="form-group">
+              <label for="login-email">メールアドレス</label>
+              <input type="email" id="login-email" required placeholder="example@tunatomo.com">
+            </div>
+            <div class="form-group">
+              <label for="login-password">パスワード</label>
+              <input type="password" id="login-password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">ログインする</button>
+          </form>
+
+          <!-- 新規登録フォーム -->
+          <form id="form-signup" class="auth-form">
+            <div class="form-group">
+              <label for="signup-role">ユーザー区分</label>
+              <select id="signup-role" required>
+                <option value="student_international">国際学生 (International Student)</option>
+                <option value="student_japanese">日本人学生 (Japanese Supporter)</option>
+                <option value="resident_local">地域住民 (Local Resident)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="signup-name">名前（ニックネーム可）</label>
+              <input type="text" id="signup-name" required placeholder="例: たろう / Yuna">
+            </div>
+            <div class="form-group">
+              <label for="signup-email">メールアドレス</label>
+              <input type="email" id="signup-email" required placeholder="example@tunatomo.com">
+            </div>
+            <div class="form-group">
+              <label for="signup-password">パスワード</label>
+              <input type="password" id="signup-password" required placeholder="6文字以上">
+            </div>
+            <div class="form-group">
+              <label>初期プロフィール画像選択</label>
+              <div class="avatar-presets">
+                <label class="avatar-preset-label">
+                  <input type="radio" name="signup-avatar" value="images/Vinit.jpg" checked>
+                  <img src="images/Vinit.jpg" alt="Preset 1">
+                </label>
+                <label class="avatar-preset-label">
+                  <input type="radio" name="signup-avatar" value="images/Vinit2.jpg">
+                  <img src="images/Vinit2.jpg" alt="Preset 2">
+                </label>
+                <label class="avatar-preset-label">
+                  <input type="radio" name="signup-avatar" value="images/Vinit3.jpg">
+                  <img src="images/Vinit3.jpg" alt="Preset 3">
+                </label>
+                <label class="avatar-preset-label">
+                  <input type="radio" name="signup-avatar" value="images/Vinit4.jpg">
+                  <img src="images/Vinit4.jpg" alt="Preset 4">
+                </label>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">アカウントを作成する</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 3. プロフィールビュー (#/profile) -->
+      <!-- ============================================== -->
+      <section id="view-profile" class="app-view">
+        <div class="profile-container">
+          <div class="profile-header card glass-card">
+            <div class="profile-header-top">
+              <div class="profile-avatar-wrapper">
+                <img id="profile-display-avatar" src="images/Vinit.jpg" alt="プロフィール写真" class="profile-avatar-img">
+              </div>
+              <div class="profile-meta-top">
+                <span id="profile-display-badge" class="badge">日本人学生</span>
+                <h1 id="profile-display-name">ゲストユーザー</h1>
+                <p id="profile-display-email" class="text-muted">guest@example.com</p>
+                <div class="profile-points-display">
+                  <span class="points-label">保有ポイント:</span>
+                  <span id="profile-display-points" class="points-val">0</span><span> pt</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-body-grid">
+            <!-- プロフィール詳細表示 / 編集フォーム -->
+            <div class="profile-card card">
+              <div class="card-header">
+                <h2>プロフィール情報</h2>
+                <button id="profile-edit-btn" class="btn btn-outline btn-sm">編集する</button>
+              </div>
+
+              <!-- 表示モード -->
+              <div id="profile-info-show" class="profile-info-content">
+                <!-- JSで各ユーザー種別に応じた項目を挿入 -->
+              </div>
+
+              <!-- 編集モードフォーム -->
+              <form id="profile-edit-form" class="profile-edit-form-style">
+                <!-- 共通項目 -->
+                <div class="form-group">
+                  <label for="edit-name">名前（ニックネーム可）</label>
+                  <input type="text" id="edit-name" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="edit-university">大学・学部名</label>
+                  <input type="text" id="edit-university" placeholder="例: ○○大学 国際関係学部">
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-hobbies">趣味（カンマ区切り）</label>
+                  <input type="text" id="edit-hobbies" placeholder="例: 料理, 旅行, アニメ">
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-skills">特技（カンマ区切り）</label>
+                  <input type="text" id="edit-skills" placeholder="例: 英会話, 案内, 楽器">
+                </div>
+
+                <!-- 国際学生専用フィールド -->
+                <div class="student-intl-fields" id="student-intl-fields-container">
+                  <div class="form-group">
+                    <label for="edit-country">出身国</label>
+                    <input type="text" id="edit-country" placeholder="例: ベトナム, アメリカ">
+                  </div>
+                  <div class="form-group">
+                    <label for="edit-native-lang">母語</label>
+                    <input type="text" id="edit-native-lang" placeholder="例: ベトナム語, 英語">
+                  </div>
+                  <div class="form-group">
+                    <label for="edit-japanese-level">日本語レベル</label>
+                    <select id="edit-japanese-level">
+                      <option value="日常会話レベル">日常会話レベル (Conversational)</option>
+                      <option value="ビジネスレベル">ビジネスレベル (Business)</option>
+                      <option value="学習中（初心者）">学習中（初心者）(Beginner)</option>
+                      <option value="ネイティブと同等">ネイティブと同等 (Native-like)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- 日本人学生・地域住民専用フィールド -->
+                <div class="supporter-fields" id="supporter-fields-container">
+                  <div class="form-group">
+                    <label for="edit-hometown">出身地</label>
+                    <input type="text" id="edit-hometown" placeholder="例: 京都府, 東京都">
+                  </div>
+                  <div class="form-group">
+                    <label for="edit-speak-langs">話せる言語（カンマ区切り）</label>
+                    <input type="text" id="edit-speak-langs" placeholder="例: 日本語, 英語">
+                  </div>
+                  <div class="form-group">
+                    <label for="edit-learn-langs">学習中の言語（カンマ区切り）</label>
+                    <input type="text" id="edit-learn-langs" placeholder="例: 中国語, 韓国語">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-bio">自己紹介</label>
+                  <textarea id="edit-bio" rows="4" placeholder="こんにちは！気軽に声をかけてください。"></textarea>
+                </div>
+
+                <div class="profile-form-actions">
+                  <button type="submit" class="btn btn-primary">保存する</button>
+                  <button type="button" id="profile-cancel-btn" class="btn btn-outline">キャンセル</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- アカウント関連ダッシュボード (予約一覧など) -->
+            <div class="profile-dashboard-card card">
+              <div class="card-header">
+                <h2>あなたの支援予約一覧</h2>
+              </div>
+              <div class="my-bookings-list" id="profile-bookings-list">
+                <!-- JSで動的に一覧描画 -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 4. サポーター検索ビュー (#/matching) -->
+      <!-- ============================================== -->
+      <section id="view-matching" class="app-view">
+        <div class="matching-container">
+          <!-- 検索フィルターパネル -->
+          <aside class="search-sidebar card">
+            <h2>サポーターを探す</h2>
+            <p class="search-intro">日本生活のサポートをしてくれる日本人学生や地域住民を検索できます。</p>
+            
+            <form id="form-search-supporter">
+              <div class="form-group">
+                <label for="search-keyword">キーワード</label>
+                <input type="text" id="search-keyword" placeholder="名前や自己紹介から検索">
+              </div>
+              <div class="form-group">
+                <label for="search-language">話せる言語</label>
+                <select id="search-language">
+                  <option value="">すべて</option>
+                  <option value="日本語">日本語</option>
+                  <option value="英語">英語</option>
+                  <option value="中国語">中国語</option>
+                  <option value="韓国語">韓国語</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="search-hometown">出身地/在住地</label>
+                <input type="text" id="search-hometown" placeholder="例: 京都">
+              </div>
+              <div class="form-group">
+                <label for="search-hobby">趣味</label>
+                <input type="text" id="search-hobby" placeholder="例: 旅行、料理">
+              </div>
+              <div class="form-group">
+                <label for="search-skill">特技</label>
+                <input type="text" id="search-skill" placeholder="例: 翻訳、ガイド">
+              </div>
+              <div class="btn-group">
+                <button type="submit" class="btn btn-primary btn-block">検索する</button>
+                <button type="button" id="search-reset-btn" class="btn btn-outline btn-block">リセット</button>
+              </div>
+            </form>
+          </aside>
+
+          <!-- 検索結果グリッド -->
+          <div class="matching-results-area">
+            <div class="results-header">
+              <h2>登録サポーター一覧 (<span id="results-count">0</span>名)</h2>
+            </div>
+            <div class="supporters-grid" id="supporters-list">
+              <!-- JSでサポーターカードを動的生成 -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 5. 支援同行予約ビュー (#/booking) -->
+      <!-- ============================================== -->
+      <section id="view-booking" class="app-view">
+        <div class="booking-wrapper">
+          <div class="booking-form-card card glass-card">
+            <div class="card-header-centered">
+              <span class="step-badge">同行サポート予約</span>
+              <h2>新しい予約を作成</h2>
+              <p>役所手続きや買い物の同行など、不安な手続きをサポーターに手伝ってもらえます。</p>
+            </div>
+
+            <form id="form-create-booking">
+              <div class="form-group">
+                <label for="booking-category">サポート項目（必須）</label>
+                <select id="booking-category" required>
+                  <option value="市役所手続き">市役所手続き（転入届・健康保険など）</option>
+                  <option value="銀行口座開設">銀行口座の開設</option>
+                  <option value="SIM契約">格安SIM・スマートフォン契約</option>
+                  <option value="病院受診">病院の受診・通訳</option>
+                  <option value="日本語サポート">日常会話や日本語の学習サポート</option>
+                  <option value="その他生活相談">その他（ゴミ出し、買い物、周辺案内など）</option>
+                </select>
+              </div>
+
+              <div class="form-group-row">
+                <div class="form-group">
+                  <label for="booking-date">希望日（必須）</label>
+                  <input type="date" id="booking-date" required>
+                </div>
+                <div class="form-group">
+                  <label for="booking-time">希望時間（必須）</label>
+                  <input type="time" id="booking-time" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="booking-supporter">希望するサポーター（任意）</label>
+                <select id="booking-supporter">
+                  <option value="">指定なし（自動マッチング）</option>
+                  <!-- JSでサポーターリストを動的に挿入 -->
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="booking-details">具体的な困りごとや依頼内容（必須）</label>
+                <textarea id="booking-details" rows="5" required placeholder="例: 先週日本に来ました。区役所で住民票の登録と、国民健康保険への加入を手伝ってほしいです。日本語はまだあまり話せません。"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block btn-lg">予約申請を送る</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 6. 地域交流イベントビュー (#/events) -->
+      <!-- ============================================== -->
+      <section id="view-events" class="app-view">
+        <div class="content-container">
+          <div class="page-title-area">
+            <h1>地域交流イベント</h1>
+            <p>学生、留学生、地域住民が一緒に参加して文化交流ができる様々なイベントをご紹介します。</p>
+          </div>
+
+          <!-- イベント一覧グリッド -->
+          <div class="events-grid" id="events-list">
+            <!-- JSで動的に表示 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 7. 掲示板ビュー (#/board) -->
+      <!-- ============================================== -->
+      <section id="view-board" class="app-view">
+        <div class="board-container">
+          <!-- スレッド一覧 -->
+          <div class="board-main card">
+            <div class="board-header">
+              <h2>相談・質問掲示板</h2>
+              <button id="board-new-thread-btn" class="btn btn-primary">質問を投稿する</button>
+            </div>
+            
+            <!-- 新規スレッド投稿フォーム (トグル式) -->
+            <div id="new-thread-container" class="new-thread-box card">
+              <h3>新しい質問を投稿</h3>
+              <form id="form-new-thread">
+                <div class="form-group">
+                  <label for="thread-title">タイトル</label>
+                  <input type="text" id="thread-title" required placeholder="例: 口座開設に必要な持ち物について">
+                </div>
+                <div class="form-group">
+                  <label for="thread-category">カテゴリー</label>
+                  <select id="thread-category">
+                    <option value="手続き">役所・生活手続き</option>
+                    <option value="学校">学校生活・授業</option>
+                    <option value="日本語">日本語学習</option>
+                    <option value="生活">日々の生活・買い物</option>
+                    <option value="その他">その他</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="thread-content">質問内容</label>
+                  <textarea id="thread-content" rows="4" required placeholder="質問の背景や困っていることを詳しく書いてみましょう。"></textarea>
+                </div>
+                <div class="btn-group">
+                  <button type="submit" class="btn btn-primary">投稿する</button>
+                  <button type="button" id="board-cancel-thread-btn" class="btn btn-outline">キャンセル</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- スレッドリスト -->
+            <div class="threads-list" id="threads-list">
+              <!-- JSで動的描画 -->
+            </div>
+          </div>
+
+          <!-- スレッド詳細表示 (掲示板の右側に表示されるか、ポップアップ) -->
+          <div class="board-sidebar card" id="thread-detail-panel">
+            <div class="thread-detail-empty" id="thread-detail-empty">
+              <p>左側のリストから質問を選択すると、ここに詳細と回答が表示されます。</p>
+            </div>
+            <div class="thread-detail-active" id="thread-detail-active" style="display:none;">
+              <!-- JSで詳細を流し込む -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 8. お役立ち情報ガイドブックビュー (#/info) -->
+      <!-- ============================================== -->
+      <section id="view-info" class="app-view">
+        <div class="info-layout">
+          <!-- 左側ガイドメニューナビ -->
+          <aside class="info-sidebar card">
+            <h2>生活ガイドブック</h2>
+            <div class="info-menu" id="info-menu-list">
+              <button class="info-menu-item active" data-target="city-hall">市役所手続き</button>
+              <button class="info-menu-item" data-target="resident-card">在留カード</button>
+              <button class="info-menu-item" data-target="health-insurance">国民健康保険</button>
+              <button class="info-menu-item" data-target="bank">銀行口座開設</button>
+              <button class="info-menu-item" data-target="sim">SIMカード契約</button>
+              <button class="info-menu-item" data-target="hospital">病院の利用</button>
+              <button class="info-menu-item" data-target="japanese">日本語学習</button>
+              <button class="info-menu-item" data-target="part-time">アルバイト探し</button>
+              <button class="info-menu-item" data-target="disaster">防災情報</button>
+            </div>
+          </aside>
+
+          <!-- 右側ガイド詳細コンテンツ -->
+          <article class="info-main card" id="info-main-content">
+            <!-- 各項目の中身はJSでロードするか、HTML直書きして切り替え -->
+            <!-- 初期表示: 市役所手続き -->
+            <div class="info-tab-content active" id="info-city-hall">
+              <div class="info-header-img" style="background-image: linear-gradient(rgba(13, 110, 253, 0.2), rgba(13, 110, 253, 0.8)), url('images/img_slider_pc_20.jpg');">
+                <h1>市役所手続き</h1>
+              </div>
+              <div class="info-body">
+                <h2>住民登録（転入届）</h2>
+                <p>日本に到着し、住む場所が決まったら<strong>14日以内</strong>に役所（区役所や市役所）に行き、住所を登録する必要があります。</p>
+                
+                <div class="info-step-box">
+                  <h3>必要なもの</h3>
+                  <ul>
+                    <li><strong>在留カード</strong>（空港で発行されたもの）</li>
+                    <li><strong>パスポート</strong></li>
+                    <li><strong>印鑑（シャチハタ不可）</strong>※あれば便利ですが、サインで代用できる場合も多いです。</li>
+                  </ul>
+                </div>
+
+                <h3>手続きの手順</h3>
+                <ol>
+                  <li>お住まいの市役所・区役所の「市民課」または「戸籍住民課」の窓口に向かいます。</li>
+                  <li>「住民異動届（転入届）」の用紙に記入し、番号札を取って待ちます。</li>
+                  <li>窓口で在留カードとパスポートを提出し、住所を裏面に印字してもらいます。</li>
+                </ol>
+                <blockquote>
+                  <strong>💡 アドバイス:</strong> 日本語での記入や案内が難しい場合は、「つなとも」の同行予約でサポーターに同行を依頼することをお勧めします！
+                </blockquote>
+              </div>
+            </div>
+
+            <!-- 在留カード -->
+            <div class="info-tab-content" id="info-resident-card">
+              <div class="info-body">
+                <h2>在留カードについて</h2>
+                <p>在留カードは、日本に3ヶ月以上滞在する外国人に交付される非常に重要な証明書です。外出時は<strong>常に携帯する義務</strong>があります。</p>
+                <h3>主な手続き</h3>
+                <ul>
+                  <li><strong>住所の変更:</strong> 引っ越しをした場合、14日以内に新しい住所の役所に届け出る必要があります。</li>
+                  <li><strong>アルバイト許可（資格外活動許可）:</strong> 留学生がアルバイトをするには、在留カードの裏面に「資格外活動許可」のスタンプが必要です。空港で申請するか、入国管理局で申請できます。</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 国民健康保険 -->
+            <div class="info-tab-content" id="info-health-insurance">
+              <div class="info-body">
+                <h2>国民健康保険 (National Health Insurance)</h2>
+                <p>日本に滞在するすべての留学生は、国民健康保険に加入する義務があります。加入すると、病気や怪我で病院に行った際の自己負担額が<strong>3割（30%）</strong>になります。</p>
+                <h3>ポイント</h3>
+                <ul>
+                  <li><strong>加入方法:</strong> 住民登録を行う際に、同じ区役所・市役所の「保険年金課」で同時に手続きできます。</li>
+                  <li><strong>保険料:</strong> 留学生は前年の所得がないため、申請することで保険料が大幅に減額されます（月額1,500円〜2,000円程度になります）。</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 銀行口座 -->
+            <div class="info-tab-content" id="info-bank">
+              <div class="info-body">
+                <h2>銀行口座の開設</h2>
+                <p>家賃の支払いやアルバイトの給与受け取りのために、日本の銀行口座が必要です。多くの銀行では、入国後6ヶ月未満の外国人の口座開設を制限していますが、<strong>ゆうちょ銀行（Japan Post Bank）</strong>は比較的簡単に開設できます。</p>
+                <div class="info-step-box">
+                  <h3>必要なもの</h3>
+                  <ul>
+                    <li>在留カード（現住所が記載されているもの）</li>
+                    <li>学生証</li>
+                    <li>連絡が取れる日本の電話番号</li>
+                    <li>印鑑（銀行印）</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- SIMカード -->
+            <div class="info-tab-content" id="info-sim">
+              <div class="info-body">
+                <h2>SIMカード・スマートフォンの契約</h2>
+                <p>日本で生活するには日本の携帯電話番号が必要です。大手の通信キャリアは契約期間の縛りや料金が高いため、留学生には格安SIM（MVNO）が人気です。</p>
+                <h3>おすすめの格安SIMブランド</h3>
+                <ul>
+                  <li><strong>Mobal:</strong> クレジットカードや日本の銀行口座がなくても契約しやすい、外国人向けのサービスです。</li>
+                  <li><strong>UQ mobile / Y!mobile:</strong> 通信速度が速く、大手ショップでサポートが受けられます。</li>
+                  <li><strong>IIJmio / mineo:</strong> 月額料金が安く、データプランが豊富です。</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 病院 -->
+            <div class="info-tab-content" id="info-hospital">
+              <div class="info-body">
+                <h2>病院の利用方法</h2>
+                <p>風邪をひいたり怪我をした場合は、大きな総合病院ではなく、まずは近くの「内科（Clinic/Internal Medicine）」や「整形外科」など個人のクリニックに行きます。</p>
+                <h3>受診の流れ</h3>
+                <ol>
+                  <li>健康保険証を必ず持参して受付に提出します。</li>
+                  <li>問診票（現在の症状やアレルギーについて）を記入します。</li>
+                  <li>医師の診察を受け、会計時に「処方箋（ほうせん）」をもらいます。</li>
+                  <li>近くの「調剤薬局」に処方箋を持っていき、お薬を受け取ります。</li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- 日本語学習 -->
+            <div class="info-tab-content" id="info-japanese">
+              <div class="info-body">
+                <h2>日本語の学習リソース</h2>
+                <p>大学の講義以外にも、地域やオンラインで安く日本語を学べるコミュニティがあります。</p>
+                <ul>
+                  <li><strong>地域の日本語教室:</strong> ボランティアグループが週に1〜2回、1回数百円程度で日本語レッスンを行っています。</li>
+                  <li><strong>つなともサポート:</strong> 日常会話の練習相手を日本人学生のサポーターに依頼できます！</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- アルバイト -->
+            <div class="info-tab-content" id="info-part-time">
+              <div class="info-body">
+                <h2>留学生のアルバイト情報</h2>
+                <p>留学生は<strong>週28時間以内</strong>（長期休暇中は1日8時間以内）でアルバイトを行うことができます。風俗営業関連の仕事は禁止されています。</p>
+                <h3>おすすめの探し方</h3>
+                <ul>
+                  <li><strong>TownWork（タウンワーク）/ BaitoRU（バイトル）:</strong> 日本で最大の求人サイトです。「留学生歓迎」で絞り込んで検索できます。</li>
+                  <li><strong>学校の掲示板:</strong> 大学が紹介する安心できるアルバイト情報が掲載されています。</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 防災 -->
+            <div class="info-tab-content" id="info-disaster">
+              <div class="info-body">
+                <h2>防災情報（地震・台風）</h2>
+                <p>日本は地震や台風などの自然災害が多い国です。事前に避難場所や防災情報を確認しておきましょう。</p>
+                <div class="info-step-box">
+                  <h3>災害に備えるアプリ・サイト</h3>
+                  <ul>
+                    <li><strong>Safety tips:</strong> 観光庁が提供する、多言語での災害通知アプリです。</li>
+                    <li><strong>NHK WORLD-JAPAN:</strong> 英語などの外国語で日本の緊急ニュースや気象情報を確認できます。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 9. 魚育成・コスチューム着せ替えビュー (#/game) -->
+      <!-- ============================================== -->
+      <section id="view-game" class="app-view">
+        <div class="game-container">
+          
+          <!-- 左側：お魚水槽アクアリウム -->
+          <div class="game-aquarium card glass-card">
+            <div class="aquarium-header">
+              <span class="game-title-tag">MY FISH AQUARIUM</span>
+              <h2 id="game-fish-name">マイフィッシュ</h2>
+              <div class="level-badge-wrapper">
+                <span>Lv.</span><span id="game-fish-level">1</span>
+              </div>
+            </div>
+
+            <!-- 水槽アニメーション -->
+            <div class="aquarium-body" id="aquarium-screen">
+              <div class="bubbles">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="seaweeds">
+                <div class="seaweed seaweed-1"></div>
+                <div class="seaweed seaweed-2"></div>
+              </div>
+              
+              <!-- 泳ぐお魚のグラフィックと装備品 -->
+              <div class="aquarium-fish-actor" id="fish-actor">
+                <!-- 装備品のオーバーレイ (帽子、メガネ、服、アクセサリー) -->
+                <div class="item-overlay item-hat" id="equipped-hat"></div>
+                <div class="item-overlay item-glasses" id="equipped-glasses"></div>
+                <div class="item-overlay item-clothing" id="equipped-clothing"></div>
+                <div class="item-overlay item-accessory" id="equipped-accessory"></div>
+                
+                <!-- 魚のベースボディ (SVG) -->
+                <svg class="game-fish-svg" viewBox="0 0 100 100">
+                  <path id="fish-body-color" d="M 20,50 C 35,30 65,30 80,50 C 65,70 35,70 20,50 Z" fill="#0D6EFD"/>
+                  <path id="fish-tail-color" d="M 20,50 L 5,38 L 10,50 L 5,62 Z" fill="#0D6EFD"/>
+                  <circle cx="68" cy="45" r="4" fill="#fff"/>
+                  <circle cx="70" cy="45" r="2" fill="#000"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="aquarium-footer">
+              <div class="xp-bar-container">
+                <div class="xp-bar-fill" id="game-xp-fill" style="width: 20%;"></div>
+              </div>
+              <div class="xp-text">
+                <span id="game-xp-current">20</span> / <span id="game-xp-next">100</span> XP (次のレベルまで <span id="game-xp-needed">80</span> pt)
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側：コスチュームショップと衣装タンス -->
+          <div class="game-shop card">
+            <div class="shop-tabs">
+              <button class="shop-tab active" data-tab="closet">クローゼット (所持品)</button>
+              <button class="shop-tab" data-tab="shop">コスチュームショップ (購入)</button>
+              <button class="shop-tab" data-tab="history">ポイント履歴</button>
+            </div>
+
+            <!-- クローゼットパネル -->
+            <div class="shop-panel active" id="panel-closet">
+              <p class="panel-subtitle">持っているアイテムを装備できます。</p>
+              <div class="locker-grid" id="closet-grid">
+                <!-- JSで所持アイテムを動的生成 -->
+              </div>
+            </div>
+
+            <!-- ショップパネル -->
+            <div class="shop-panel" id="panel-shop">
+              <div class="shop-header-row">
+                <p class="panel-subtitle">ポイントを使って新しいアイテムを解放できます。</p>
+                <div class="shop-current-points">
+                  所持: <span id="shop-points-val" class="points-val">0</span> pt
+                </div>
+              </div>
+              <div class="locker-grid" id="shop-grid">
+                <!-- JSでショップアイテムを動的生成 -->
+              </div>
+            </div>
+
+            <!-- ポイント履歴パネル -->
+            <div class="shop-panel" id="panel-history">
+              <p class="panel-subtitle">最近のポイント獲得履歴です。</p>
+              <div class="history-list" id="points-history-list">
+                <!-- JSで履歴一覧を動的生成 -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- グローバルフッター -->
+    <footer class="global-footer">
+      <div class="footer-container">
+        <div class="footer-left">
+          <div class="footer-logo">
+            <h2>つなとも</h2>
+            <p>国際学生と地域を結ぶサポートネットワーク</p>
+          </div>
+          <p class="copyright">&copy; 2026 Tunatomo. All rights reserved.</p>
+        </div>
+        <div class="footer-right">
+          <h3>お問い合わせ</h3>
+          <p>メール: contact@tunatomo.example.com</p>
+          <div class="footer-social">
+            <a href="https://line.me/R/ti/p/mock" target="_blank" rel="noopener noreferrer" class="social-link line-link">
+              <span>LINE公式アカウント</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- JavaScript App Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
