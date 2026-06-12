@@ -4,42 +4,42 @@
 
 /* 1. 変数の定義と基本設計 */
 :root {
-  /* Core palette — richer, more saturated */
-  --color-primary:       hsl(221, 92%, 52%);
-  --color-primary-light: hsl(208, 88%, 62%);
-  --color-primary-dark:  hsl(224, 86%, 44%);
-  --color-secondary:     hsl(195, 100%, 44%);
-  --color-accent:        hsl(152, 68%, 40%);
-  --color-purple:        hsl(255, 80%, 62%);
-  --color-pink:          hsl(328, 82%, 60%);
+  /* Core palette — blue, green, white only */
+  --color-primary:       hsl(213, 94%, 48%);
+  --color-primary-light: hsl(200, 90%, 58%);
+  --color-primary-dark:  hsl(217, 88%, 38%);
+  --color-secondary:     hsl(195, 100%, 42%);
+  --color-accent:        hsl(152, 68%, 38%);
+  --color-green:         hsl(158, 64%, 44%);
+  --color-teal:          hsl(178, 70%, 40%);
   --color-gold:          hsl(40, 96%, 52%);
 
   /* Backgrounds */
-  --color-bg-light: hsl(220, 30%, 97%);
+  --color-bg-light: hsl(210, 30%, 97%);
   --color-bg-card:  hsla(0, 0%, 100%, 0.92);
-  --color-bg-secondary: hsl(220, 28%, 94%);
+  --color-bg-secondary: hsl(210, 28%, 94%);
 
   /* Text */
-  --color-text-dark:  hsl(222, 52%, 10%);
-  --color-text-muted: hsl(218, 18%, 46%);
+  --color-text-dark:  hsl(215, 52%, 10%);
+  --color-text-muted: hsl(210, 18%, 46%);
 
   /* Borders */
-  --color-border: hsla(220, 22%, 88%, 0.7);
+  --color-border: hsla(210, 22%, 88%, 0.7);
 
-  /* Gradients */
-  --gradient-ocean:   linear-gradient(135deg, hsl(221,92%,52%) 0%, hsl(195,100%,44%) 100%);
-  --gradient-aurora:  linear-gradient(135deg, hsl(221,92%,56%) 0%, hsl(255,80%,62%) 60%, hsl(328,82%,60%) 100%);
-  --gradient-soft:    linear-gradient(135deg, hsl(212,80%,96%) 0%, hsl(255,60%,97%) 100%);
-  --gradient-sunset:  linear-gradient(135deg, hsl(328,82%,60%) 0%, hsl(40,96%,55%) 100%);
+  /* Gradients — blue & green only, no purple/pink */
+  --gradient-ocean:   linear-gradient(135deg, hsl(213,94%,48%) 0%, hsl(178,70%,40%) 100%);
+  --gradient-aurora:  linear-gradient(135deg, hsl(213,94%,52%) 0%, hsl(195,100%,42%) 55%, hsl(158,64%,44%) 100%);
+  --gradient-soft:    linear-gradient(135deg, hsl(210,80%,96%) 0%, hsl(170,60%,95%) 100%);
+  --gradient-sunset:  linear-gradient(135deg, hsl(195,100%,42%) 0%, hsl(158,64%,44%) 100%);
   --gradient-glass:   linear-gradient(135deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.45) 100%);
 
-  /* Shadows — more dramatic */
+  /* Shadows */
   --shadow-sm:    0 2px 8px -2px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
-  --shadow-md:    0 8px 24px -4px rgba(34,60,120,0.10), 0 3px 8px -2px rgba(34,60,120,0.06);
-  --shadow-lg:    0 20px 40px -8px rgba(34,60,120,0.15), 0 8px 16px -4px rgba(34,60,120,0.08);
-  --shadow-xl:    0 32px 64px -12px rgba(34,60,120,0.20), 0 12px 24px -6px rgba(34,60,120,0.10);
-  --shadow-glass: 0 8px 32px rgba(34,60,120,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
-  --shadow-glow:  0 0 30px rgba(99,132,252,0.25), 0 8px 24px rgba(34,60,120,0.12);
+  --shadow-md:    0 8px 24px -4px rgba(13,80,160,0.10), 0 3px 8px -2px rgba(13,80,160,0.06);
+  --shadow-lg:    0 20px 40px -8px rgba(13,80,160,0.15), 0 8px 16px -4px rgba(13,80,160,0.08);
+  --shadow-xl:    0 32px 64px -12px rgba(13,80,160,0.20), 0 12px 24px -6px rgba(13,80,160,0.10);
+  --shadow-glass: 0 8px 32px rgba(13,80,160,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+  --shadow-glow:  0 0 30px rgba(13,160,210,0.28), 0 8px 24px rgba(13,80,160,0.12);
 
   /* Radius */
   --radius-xs: 6px;
@@ -67,7 +67,7 @@ html { scroll-behavior: smooth; }
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, hsl(221,92%,68%), hsl(255,80%,72%));
+  background: linear-gradient(180deg, hsl(213,94%,58%), hsl(178,70%,52%));
   border-radius: 8px;
   border: 2px solid transparent;
   background-clip: content-box;
@@ -707,7 +707,7 @@ textarea:focus {
 .card-booking::after  { background: linear-gradient(90deg,#0d6efd,#4ea8de); }
 .card-board::after    { background: linear-gradient(90deg,#ff7e5f,#feb47b); }
 .card-events::after   { background: linear-gradient(90deg,#16a34a,#4ade80); }
-.card-info::after     { background: linear-gradient(90deg,#8b5cf6,#c084fc); }
+.card-info::after     { background: linear-gradient(90deg,#0ea5e9,#22d3ee); }
 .quick-card:hover::after { opacity: 1; }
 
 .quick-card:hover {
@@ -730,7 +730,7 @@ textarea:focus {
 .card-booking .quick-icon-wrapper { background: linear-gradient(135deg, #0d6efd, #60a5fa); }
 .card-board   .quick-icon-wrapper { background: linear-gradient(135deg, #f97316, #fbbf24); }
 .card-events  .quick-icon-wrapper { background: linear-gradient(135deg, #16a34a, #34d399); }
-.card-info    .quick-icon-wrapper { background: linear-gradient(135deg, #8b5cf6, #e879f9); }
+.card-info    .quick-icon-wrapper { background: linear-gradient(135deg, #0ea5e9, #22d3ee); }
 
 .quick-card-body h3 {
   font-size: 1.15rem;
@@ -1480,8 +1480,8 @@ textarea:focus {
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 700;
-  background: #ede9fe;
-  color: #7c3aed;
+  background: #cffafe;
+  color: #0e7490;
 }
 
 /* ==========================================================================
@@ -1511,9 +1511,9 @@ textarea:focus {
 }
 
 .tier-whale {
-  background: #ede9fe;
-  color: #6d28d9;
-  border-color: #a5b4fc;
+  background: #cffafe;
+  color: #0e7490;
+  border-color: #67e8f9;
 }
 
 .tier-golden-whale {
@@ -2117,7 +2117,7 @@ textarea:focus {
 
 .equipped-kimono .item-clothing::after {
   display: block;
-  background-color: #8b5cf6;
+  background-color: #0ea5e9;
   border-radius: 12px;
   border-left: 4px solid #fbcfe8;
   width: 35px;
@@ -2293,7 +2293,7 @@ textarea:focus {
 }
 
 .preview-item-kimono {
-  background-color: #8b5cf6;
+  background-color: #0ea5e9;
   width: 35px;
   height: 25px;
   border-radius: 4px;
@@ -3317,15 +3317,15 @@ body.lang-en .lang-ja {
   0%,100%{box-shadow:0 0 0 4px #f59e0b,0 0 20px rgba(245,158,11,0.4)}
   50%{box-shadow:0 0 0 5px #fcd34d,0 0 30px rgba(245,158,11,0.8)}
 }
-.frame-neon { box-shadow:0 0 0 3px #8b5cf6, 0 0 16px rgba(139,92,246,0.7); border-radius:50%; animation:neon-pulse 1.5s ease-in-out infinite; }
+.frame-neon { box-shadow:0 0 0 3px #0ea5e9, 0 0 16px rgba(14,165,233,0.7); border-radius:50%; animation:neon-pulse 1.5s ease-in-out infinite; }
 @keyframes neon-pulse {
-  0%,100%{box-shadow:0 0 0 3px #8b5cf6,0 0 16px rgba(139,92,246,0.5)}
+  0%,100%{box-shadow:0 0 0 3px #0ea5e9,0 0 16px rgba(14,165,233,0.5)}
   50%{box-shadow:0 0 0 4px #a78bfa,0 0 28px rgba(139,92,246,0.9)}
 }
 
 /* Digital avatar previews */
 .preview-avatar-robot,.preview-avatar-pixel,.preview-avatar-anime,.preview-avatar-fun,.preview-avatar-glass { width:60px;height:60px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:2rem; }
-.preview-frame-rainbow,.preview-frame-golden,.preview-frame-neon,.preview-effect-sparkle,.preview-effect-holo { width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2); }
+.preview-frame-rainbow,.preview-frame-golden,.preview-frame-neon,.preview-effect-sparkle,.preview-effect-holo { width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#0d6efd,#22d3ee); }
 
 /* Ranking view */
 #view-ranking .card { padding: 0; overflow: hidden; }

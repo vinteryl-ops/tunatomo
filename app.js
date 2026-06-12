@@ -10,7 +10,7 @@ const BLACKLIST_WORDS = [
 // Tier system based on cumulative XP (totalXP)
 const TIERS = [
   { name: "Golden Whale", emoji: "🏆", min: 1000, color: "#f59e0b", bg: "#fef9c3", border: "#fcd34d", css: "tier-golden-whale" },
-  { name: "Whale",        emoji: "🐋", min: 500,  color: "#6366f1", bg: "#ede9fe", border: "#a5b4fc", css: "tier-whale" },
+  { name: "Whale",        emoji: "🐋", min: 500,  color: "#0e7490", bg: "#cffafe", border: "#67e8f9", css: "tier-whale" },
   { name: "Shark",        emoji: "🦈", min: 200,  color: "#0D6EFD", bg: "#dbeafe", border: "#93c5fd", css: "tier-shark" },
   { name: "Tuna",         emoji: "🐟", min: 0,    color: "#16a34a", bg: "#dcfce7", border: "#86efac", css: "tier-tuna" }
 ];
