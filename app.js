@@ -850,6 +850,32 @@ class TunatomoApp {
       mobileToggleBtn.addEventListener("click", handleLangToggle);
     }
 
+    // Custom language picker
+    const pickerBtn = document.getElementById("lang-picker-btn");
+    const langDropdown = document.getElementById("lang-dropdown");
+    if (pickerBtn && langDropdown) {
+      pickerBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        langDropdown.classList.toggle("open");
+      });
+      document.addEventListener("click", () => langDropdown.classList.remove("open"));
+      langDropdown.querySelectorAll(".lang-opt").forEach(opt => {
+        opt.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const lang = opt.dataset.lang;
+          const label = opt.textContent.trim();
+          document.getElementById("lang-picker-label").textContent = label;
+          langDropdown.classList.remove("open");
+          // Trigger Google Translate
+          const combo = document.querySelector(".goog-te-combo");
+          if (combo) {
+            combo.value = lang;
+            combo.dispatchEvent(new Event("change"));
+          }
+        });
+      });
+    }
+
     // スクロールインジケーターのクリックイベント
     const scrollInd = document.getElementById("scroll-indicator");
     if (scrollInd) {
@@ -1038,10 +1064,10 @@ class TunatomoApp {
       if (mobileNavChat) mobileNavChat.style.display = "none";
 
       statusEl.innerHTML = `
-        <a href="#/login" class="btn btn-primary btn-sm login-btn">${isEn ? "Login / Register" : "ログイン / 登録"}</a>
+        <a href="#/login" class="btn btn-primary btn-sm login-btn">Sign In / Sign Up</a>
       `;
       mobileNavUserEl.innerHTML = `
-        <a href="#/login" class="btn btn-primary btn-block">${isEn ? "Login / Create Account" : "ログイン / アカウント作成"}</a>
+        <a href="#/login" class="btn btn-primary btn-block">Sign In / Sign Up</a>
       `;
     }
   }

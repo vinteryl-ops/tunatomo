@@ -2640,6 +2640,78 @@ body.lang-en .lang-ja {
 }
 
 /* ==========================================================================
+   Custom Language Picker
+   ========================================================================== */
+.custom-lang-picker {
+  position: relative;
+}
+
+.glass-lang-btn {
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1.5px solid rgba(13, 110, 253, 0.35);
+  border-radius: 20px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--color-primary);
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(13, 110, 253, 0.1), inset 0 1px 0 rgba(255,255,255,0.8);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.glass-lang-btn:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: var(--color-primary);
+  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.18);
+  transform: translateY(-1px);
+}
+
+.lang-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(13, 110, 253, 0.2);
+  border-radius: 16px;
+  padding: 6px;
+  min-width: 180px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  z-index: 9999;
+}
+
+.lang-dropdown.open {
+  display: block;
+  animation: fadeInDown 0.15s ease;
+}
+
+.lang-opt {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+  font-size: 0.85rem;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lang-opt:hover {
+  background: rgba(13, 110, 253, 0.1);
+  color: var(--color-primary);
+}
+
+/* ==========================================================================
    ONBOARDING MODAL
    ========================================================================== */
 .onboarding-overlay {
