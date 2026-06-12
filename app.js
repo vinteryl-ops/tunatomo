@@ -270,6 +270,16 @@ class TunatomoApp {
             this.state.events.unshift(def);
           }
         });
+        // Merge hardcoded staff accounts into saved state
+        const STAFF_ACCOUNTS = [
+          { id: "user_yuzu_admin", email: "yuzu@admin.com", password: "admin", name: "Yuzu", role: "student_japanese", avatar: "images/Tuna8.jpg", university: "Ritsumeikan Asia Pacific University (APU)", college: "APM", semester: "4", hometown: "福岡県", speakLangs: ["日本語","英語"], learnLangs: ["スペイン語"], hobbies: ["音楽","ハイキング","料理"], skills: ["日本語指導","大分案内","英会話サポート"], bio: "Hi! I'm Yuzu, a 4th semester APM student at APU. I love helping international students settle into life in Beppu.", points: 180, level: 2, totalXP: 180, fishName: "YuzuFish", fishColor: "#f59e0b", fishTailColor: "#d97706", activeFishModel: "images/Tuna8.jpg", unlockedItems: [], equippedItems: { hat: null, glasses: null, clothing: null, accessory: null }, agreedToChatRules: true, onboardingDone: true },
+          { id: "user_vinter_admin", email: "vinter@admin.com", password: "admin", name: "Vinter", role: "resident", avatar: "images/Tuna10.jpg", university: "一般地域住民", college: "APS", semester: "6", hometown: "大分県別府市", speakLangs: ["日本語","英語","タガログ語"], learnLangs: ["フランス語"], hobbies: ["サーフィン","写真撮影","カフェ開拓"], skills: ["生活手続きサポート","多言語対応","観光案内"], bio: "Hey! I'm Vinter, a local resident in Beppu. I speak English, Japanese, and Filipino. Happy to help with anything!", points: 250, level: 3, totalXP: 350, fishName: "VinterFish", fishColor: "#8b5cf6", fishTailColor: "#7c3aed", activeFishModel: "images/Tuna10.jpg", unlockedItems: ["crown"], equippedItems: { hat: "crown", glasses: null, clothing: null, accessory: null }, agreedToChatRules: true, onboardingDone: true }
+        ];
+        STAFF_ACCOUNTS.forEach(acc => {
+          if (!this.state.users.find(u => u.id === acc.id)) {
+            this.state.users.push(acc);
+          }
+        });
       } catch (e) {
         console.error("State parse error", e);
         this.loadDefaultState();
@@ -336,7 +346,67 @@ class TunatomoApp {
         fishTailColor: "#00A3FF",
         activeFishModel: "images/Tuna6.jpg",
         unlockedItems: ["straw_hat"],
-        equippedItems: { hat: "straw_hat", glasses: null, clothing: null, accessory: null }
+        equippedItems: { hat: "straw_hat", glasses: null, clothing: null, accessory: null },
+        agreedToChatRules: true,
+        onboardingDone: true
+      },
+      // yuzu@admin.com — Japanese student supporter
+      {
+        id: "user_yuzu_admin",
+        email: "yuzu@admin.com",
+        password: "admin",
+        name: "Yuzu",
+        role: "student_japanese",
+        avatar: "images/Tuna8.jpg",
+        university: "Ritsumeikan Asia Pacific University (APU)",
+        college: "APM",
+        semester: "4",
+        hometown: "福岡県",
+        speakLangs: ["日本語", "英語"],
+        learnLangs: ["スペイン語"],
+        hobbies: ["音楽", "ハイキング", "料理"],
+        skills: ["日本語指導", "大分案内", "英会話サポート"],
+        bio: "Hi! I'm Yuzu, a 4th semester APM student at APU. I love helping international students settle into life in Beppu. Ask me anything about campus life, local spots, or Japanese culture!",
+        points: 180,
+        level: 2,
+        totalXP: 180,
+        fishName: "YuzuFish",
+        fishColor: "#f59e0b",
+        fishTailColor: "#d97706",
+        activeFishModel: "images/Tuna8.jpg",
+        unlockedItems: [],
+        equippedItems: { hat: null, glasses: null, clothing: null, accessory: null },
+        agreedToChatRules: true,
+        onboardingDone: true
+      },
+      // vinter@admin.com — local resident supporter
+      {
+        id: "user_vinter_admin",
+        email: "vinter@admin.com",
+        password: "admin",
+        name: "Vinter",
+        role: "resident",
+        avatar: "images/Tuna10.jpg",
+        university: "一般地域住民",
+        college: "APS",
+        semester: "6",
+        hometown: "大分県別府市",
+        speakLangs: ["日本語", "英語", "タガログ語"],
+        learnLangs: ["フランス語"],
+        hobbies: ["サーフィン", "写真撮影", "カフェ開拓"],
+        skills: ["生活手続きサポート", "多言語対応", "観光案内"],
+        bio: "Hey! I'm Vinter, a local resident in Beppu with experience helping international students with daily life procedures. I speak English, Japanese, and Filipino. Happy to help with anything from SIM cards to city hall visits!",
+        points: 250,
+        level: 3,
+        totalXP: 350,
+        fishName: "VinterFish",
+        fishColor: "#8b5cf6",
+        fishTailColor: "#7c3aed",
+        activeFishModel: "images/Tuna10.jpg",
+        unlockedItems: ["crown"],
+        equippedItems: { hat: "crown", glasses: null, clothing: null, accessory: null },
+        agreedToChatRules: true,
+        onboardingDone: true
       }
     ];
     
