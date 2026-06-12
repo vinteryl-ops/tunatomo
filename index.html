@@ -54,34 +54,16 @@
           <a href="#/admin" class="nav-link" data-page="admin" id="nav-admin" style="display:none;" data-t="nav-admin">管理画面</a>
         </nav>
 
-        <!-- Custom Language Picker -->
+        <!-- Google Translate only -->
         <div class="lang-selector">
-          <button class="btn btn-outline btn-sm lang-toggle-btn" id="lang-toggle-btn" style="min-width: 80px;">English</button>
-          <div class="custom-lang-picker" id="custom-lang-picker">
-            <button class="glass-lang-btn" id="lang-picker-btn" aria-label="Select language">
-              🌐 <span id="lang-picker-label">Language</span> ▾
-            </button>
-            <div class="lang-dropdown" id="lang-dropdown">
-              <button class="lang-opt" data-lang="ja">🇯🇵 日本語</button>
-              <button class="lang-opt" data-lang="en">🇬🇧 English</button>
-              <button class="lang-opt" data-lang="ko">🇰🇷 한국어</button>
-              <button class="lang-opt" data-lang="zh-CN">🇨🇳 中文（简体）</button>
-              <button class="lang-opt" data-lang="vi">🇻🇳 Tiếng Việt</button>
-              <button class="lang-opt" data-lang="th">🇹🇭 ภาษาไทย</button>
-              <button class="lang-opt" data-lang="id">🇮🇩 Bahasa Indonesia</button>
-              <button class="lang-opt" data-lang="fr">🇫🇷 Français</button>
-              <button class="lang-opt" data-lang="de">🇩🇪 Deutsch</button>
-              <button class="lang-opt" data-lang="es">🇪🇸 Español</button>
-              <button class="lang-opt" data-lang="ar">🇸🇦 العربية</button>
-            </div>
-          </div>
-          <div id="google_translate_element" class="gtranslate-widget" style="display:none;"></div>
+          <div id="google_translate_element" class="gtranslate-widget"></div>
         </div>
 
         <!-- ユーザープロフィール・ステータスエリア -->
         <div class="user-status-area" id="header-user-status">
           <!-- JSで動的にログイン/ログアウトUIを挿入 -->
-          <a href="#/login" class="btn btn-primary btn-sm login-btn">ログイン / 登録</a>
+          <a href="#/login" class="btn btn-light btn-sm" style="margin-right:4px;">Sign In</a>
+          <a href="#/login" class="btn btn-primary btn-sm">Sign Up</a>
         </div>
 
         <!-- モバイルメニューボタン -->
