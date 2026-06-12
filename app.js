@@ -931,6 +931,28 @@ class TunatomoApp {
       });
     }
 
+    // LINE modal open/close
+    const lineModalOverlay = document.getElementById("line-modal-overlay");
+    const openLineModal = () => {
+      if (lineModalOverlay) lineModalOverlay.style.display = "flex";
+    };
+    const closeLineModal = () => {
+      if (lineModalOverlay) lineModalOverlay.style.display = "none";
+    };
+    ["open-line-modal-btn", "footer-line-btn", "home-qr-box", "footer-qr-img"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("click", openLineModal);
+    });
+    ["close-line-modal", "close-line-modal-2"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("click", closeLineModal);
+    });
+    if (lineModalOverlay) {
+      lineModalOverlay.addEventListener("click", (e) => {
+        if (e.target === lineModalOverlay) closeLineModal();
+      });
+    }
+
     // スクロールエフェクト（ヒーローパララックス＆ヘッダー変化）
     window.addEventListener("scroll", () => {
       const scrollY = window.scrollY;
