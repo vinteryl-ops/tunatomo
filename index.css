@@ -1303,6 +1303,47 @@ textarea:focus {
   border-radius: 4px;
 }
 
+.event-category-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.event-cost-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.event-cost-badge.free {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.event-cost-badge.paid {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.event-recurring-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
 .event-body {
   padding: 20px;
   flex: 1;

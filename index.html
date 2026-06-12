@@ -638,9 +638,64 @@
       <!-- ============================================== -->
       <section id="view-events" class="app-view">
         <div class="content-container">
-          <div class="page-title-area">
-            <h1>地域交流イベント</h1>
-            <p>学生、留学生、地域住民が一緒に参加して文化交流ができる様々なイベントをご紹介します。</p>
+          <div class="page-title-area" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+            <div>
+              <h1>Community Events</h1>
+              <p>Join hangouts, study groups, outdoor trips and more — organized by students, for students. Anyone can create an event!</p>
+            </div>
+            <button id="create-event-btn" class="btn btn-primary" style="display:none; gap:6px; align-items:center;">
+              ＋ Create Event
+            </button>
+          </div>
+
+          <!-- Create Event Form -->
+          <div id="create-event-container" class="new-thread-container card" style="margin-bottom:24px;">
+            <h3 style="margin-bottom:16px;">✨ Create a New Event</h3>
+            <form id="form-create-event">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div class="form-group">
+                  <label>Event Title *</label>
+                  <input type="text" id="ev-title" required placeholder="e.g. Beach Hangout, Study Session...">
+                </div>
+                <div class="form-group">
+                  <label>Category *</label>
+                  <select id="ev-category">
+                    <option value="Hangout">🎉 Hangout</option>
+                    <option value="Study">📚 Study</option>
+                    <option value="Outdoor">🌿 Outdoor</option>
+                    <option value="Cultural">🎌 Cultural</option>
+                    <option value="Social">🔥 Social</option>
+                    <option value="Sports">⚽ Sports</option>
+                    <option value="Food">🍜 Food</option>
+                    <option value="Other">🌟 Other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Date & Time *</label>
+                  <input type="text" id="ev-date" required placeholder="e.g. July 20, 2026 — 14:00-17:00">
+                </div>
+                <div class="form-group">
+                  <label>Location *</label>
+                  <input type="text" id="ev-location" required placeholder="e.g. APU Campus, Beppu Beach...">
+                </div>
+                <div class="form-group">
+                  <label>Cost</label>
+                  <input type="text" id="ev-cost" placeholder="e.g. Free, ¥500 per person...">
+                </div>
+                <div class="form-group">
+                  <label>Photo URL <span style="font-size:0.75rem; color:var(--color-text-muted);">(from pexels.com — optional)</span></label>
+                  <input type="url" id="ev-photo" placeholder="https://images.pexels.com/...">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Description *</label>
+                <textarea id="ev-desc" rows="3" required placeholder="What's the plan? Who should come? Anything to bring?"></textarea>
+              </div>
+              <div style="display:flex; gap:10px;">
+                <button type="submit" class="btn btn-primary">🚀 Publish Event</button>
+                <button type="button" id="cancel-create-event" class="btn btn-outline">Cancel</button>
+              </div>
+            </form>
           </div>
 
           <!-- イベント一覧グリッド -->
@@ -723,6 +778,7 @@
               <button class="info-menu-item" data-target="health-insurance">国民健康保険</button>
               <button class="info-menu-item" data-target="bank">銀行口座開設</button>
               <button class="info-menu-item" data-target="sim">SIMカード契約</button>
+              <button class="info-menu-item" data-target="mynumber">マイナンバー</button>
               <button class="info-menu-item" data-target="hospital">病院の利用</button>
               <button class="info-menu-item" data-target="japanese">日本語学習</button>
               <button class="info-menu-item" data-target="part-time">アルバイト探し</button>
@@ -843,6 +899,42 @@
                   <li><strong>UQ mobile / Y!mobile:</strong> 通信速度が速く、大手ショップでサポートが受けられます。</li>
                   <li><strong>IIJmio / mineo:</strong> 月額料金が安く、データプランが豊富です。</li>
                 </ul>
+              </div>
+            </div>
+
+            <!-- マイナンバー -->
+            <div class="info-tab-content" id="info-mynumber">
+              <div class="info-body">
+                <h2>マイナンバー / My Number Card</h2>
+                <p>マイナンバー（Individual Number）is a 12-digit national ID number assigned to every resident in Japan, including international students. It's needed for tax, insurance, and banking procedures.</p>
+
+                <h3>📋 What is My Number?</h3>
+                <ul>
+                  <li>Every person registered in Japan receives a <strong>My Number (マイナンバー)</strong> — a 12-digit unique ID.</li>
+                  <li>You will receive a notification letter at your registered address (住民票) after completing address registration at the city office.</li>
+                  <li>You can then apply for the <strong>My Number Card (マイナンバーカード)</strong> — a physical IC card with your photo.</li>
+                </ul>
+
+                <h3>🏛️ How to Get Your My Number Card</h3>
+                <div class="info-step-box">
+                  <div class="info-step"><span class="step-num">1</span><div><strong>Register your address</strong> at the local city/ward office (市役所) after moving in. Required: passport, residence certificate.</div></div>
+                  <div class="info-step"><span class="step-num">2</span><div><strong>Receive your notification letter</strong> (通知カード or マイナンバー通知書) by post — this contains your 12-digit number.</div></div>
+                  <div class="info-step"><span class="step-num">3</span><div><strong>Apply for the card</strong> online at <em>myna.go.jp</em> or at a convenience store photo kiosk. Takes about 1–2 months.</div></div>
+                  <div class="info-step"><span class="step-num">4</span><div><strong>Pick up your card</strong> at the city office. Bring your notification, passport, and residence card.</div></div>
+                </div>
+
+                <h3>💡 Why You Need It</h3>
+                <ul>
+                  <li><strong>Part-time jobs:</strong> Employers require your My Number for tax registration.</li>
+                  <li><strong>National Health Insurance:</strong> Needed when enrolling or updating your plan.</li>
+                  <li><strong>Bank accounts:</strong> Some banks (like Japan Post) now require My Number for account opening.</li>
+                  <li><strong>Tax filing:</strong> Annual income tax returns require it.</li>
+                  <li><strong>Convenience:</strong> The card doubles as a government-issued photo ID accepted everywhere.</li>
+                </ul>
+
+                <h3>📞 Need Help?</h3>
+                <p>The Tunatomo team can accompany you to the city office for My Number procedures. Book a companion support slot on the <strong>Book Support</strong> page!</p>
+                <p style="margin-top:8px;"><strong>My Number General Helpline (English available):</strong> <a href="tel:0120-95-0178" style="color:var(--color-primary); font-weight:700;">0120-95-0178</a> (Mon–Fri 9:30–20:00, Sat/Sun 9:30–17:30)</p>
               </div>
             </div>
 

@@ -146,21 +146,59 @@ const DEFAULT_ANNOUNCEMENTS = [
 const DEFAULT_EVENTS = [
   {
     id: "event_1",
-    title: "手作りたこ焼きパーティー！",
-    date: "2026年6月20日(土) 12:00 - 15:00",
-    location: "京都市国際交流会館 調理室",
-    desc: "みんなで一緒にたこ焼きを作って食べましょう！日本人学生や地域住民の方もたくさん参加します。初めてでも簡単です。",
-    image: "images/img_slider_pc_20.jpg",
-    participants: ["Marie", "古川 柚葉", "山田 太郎"]
+    title: "🗣️ Language Exchange Study Group",
+    date: "Every Saturday & Sunday — 14:00 - 17:00",
+    location: "APU Campus — Student Hall (Room TBA)",
+    cost: "Free 🆓",
+    category: "Study",
+    desc: "Japanese & English study group merged into one! Japanese students help internationals with Japanese, internationals help with English — everyone wins. All levels welcome. Bring your textbooks, questions, or just come chat. Held every Saturday and Sunday at APU.",
+    image: "https://images.pexels.com/photos/1438072/pexels-photo-1438072.jpeg?auto=compress&cs=tinysrgb&w=800",
+    participants: ["Marie", "古川 柚葉", "山田 太郎", "Kim"],
+    recurring: true
   },
   {
     id: "event_2",
-    title: "京都・嵐山 散策ツアー",
-    date: "2026年6月28日(日) 10:00 - 16:00",
-    location: "嵐山周辺（阪急嵐山駅集合）",
-    desc: "嵐山の竹林や渡月橋を散策し、お寺を巡ります。抹茶アイスを食べながら、留学生とサポーターで楽しくおしゃべりしましょう！",
-    image: "images/Tuna5.jpg",
-    participants: ["古川 柚葉"]
+    title: "🏕️ Camping Trip — Kyushu Mountains",
+    date: "2026年7月19日(日) 08:00 — 7月20日(月) 18:00",
+    location: "Kuju Highland, Oita Prefecture (Bus departs from APU)",
+    cost: "¥2,500 per person (includes transport & campsite)",
+    category: "Outdoor",
+    desc: "Escape the city for a night under the stars! We'll set up tents together, cook BBQ, stargaze, and hike trails in the morning. A mix of international and Japanese students. Gear can be shared — just bring your sleeping bag and good vibes.",
+    image: "https://images.pexels.com/photos/1687845/pexels-photo-1687845.jpeg?auto=compress&cs=tinysrgb&w=800",
+    participants: ["古川 柚葉", "山田 太郎"]
+  },
+  {
+    id: "event_3",
+    title: "🔥 Beach Bonfire Night — Beppu Beach",
+    date: "2026年7月25日(土) 18:00 - 23:00",
+    location: "Beppu Shirahama Beach (Meet at APU bus stop 17:30)",
+    cost: "¥500 per person (firewood & snacks included)",
+    category: "Social",
+    desc: "Chill beach night with a bonfire, music, snacks, and good company. We'll play beach games as the sun sets, then gather around the fire for stories and marshmallows. Open to everyone — bring friends! Limited to 30 people.",
+    image: "https://images.pexels.com/photos/1229861/pexels-photo-1229861.jpeg?auto=compress&cs=tinysrgb&w=800",
+    participants: ["Marie"]
+  },
+  {
+    id: "event_4",
+    title: "🎮 APU Game & Hangout Night",
+    date: "2026年7月11日(土) 19:00 - 22:00",
+    location: "APU Campus — Lounge Area",
+    cost: "Free 🆓",
+    category: "Hangout",
+    desc: "Board games, card games, and chill conversation! No theme, no schedule — just show up, meet people, and have fun. Great for first-timers who want to make friends in a relaxed setting. Snacks provided.",
+    image: "https://images.pexels.com/photos/1153929/pexels-photo-1153929.jpeg?auto=compress&cs=tinysrgb&w=800",
+    participants: ["山田 太郎", "Kim"]
+  },
+  {
+    id: "event_5",
+    title: "🍜 Ramen Cook-Off Challenge",
+    date: "2026年7月4日(土) 13:00 - 16:00",
+    location: "APU Campus — Cooking Room",
+    cost: "¥300 per person (ingredients split)",
+    category: "Cultural",
+    desc: "Teams of mixed nationalities compete to make the best ramen from scratch! Judges will taste and score each bowl. Prizes for the winners. No cooking experience needed — just enthusiasm and a love of ramen.",
+    image: "https://images.pexels.com/photos/884596/pexels-photo-884596.jpeg?auto=compress&cs=tinysrgb&w=800",
+    participants: ["古川 柚葉", "高橋 恵子"]
   }
 ];
 
@@ -226,6 +264,12 @@ class TunatomoApp {
         this.state = JSON.parse(savedState);
         if (!this.state.chats) this.state.chats = [];
         if (!this.state.reports) this.state.reports = [];
+        // Merge any new default events that aren't in saved state
+        DEFAULT_EVENTS.forEach(def => {
+          if (!this.state.events.find(e => e.id === def.id)) {
+            this.state.events.unshift(def);
+          }
+        });
       } catch (e) {
         console.error("State parse error", e);
         this.loadDefaultState();
@@ -1418,58 +1462,135 @@ class TunatomoApp {
   // 10. 地域交流イベント画面の描画
   renderEvents() {
     const listEl = document.getElementById("events-list");
+    const createFormEl = document.getElementById("create-event-container");
     const user = this.state.currentUser;
+
+    // Show/hide create button
+    const createBtn = document.getElementById("create-event-btn");
+    if (createBtn) {
+      createBtn.style.display = user ? "inline-flex" : "none";
+    }
+
+    const categoryColors = {
+      "Study": "#0D6EFD", "Outdoor": "#16a34a", "Social": "#f59e0b",
+      "Hangout": "#8b5cf6", "Cultural": "#ef4444"
+    };
 
     let html = "";
     this.state.events.forEach(ev => {
       const isParticipating = user && ev.participants.includes(user.name);
-      const btnText = isParticipating ? "参加登録済み" : "イベントに参加する";
+      const btnText = isParticipating ? "✓ Joined!" : "Join Event";
       const btnClass = isParticipating ? "btn-outline" : "btn-primary";
-      
-      // 参加人数
       const count = ev.participants.length;
+      const catColor = categoryColors[ev.category] || "#0D6EFD";
+      const costBadge = ev.cost && ev.cost.toLowerCase().includes("free")
+        ? `<span class="event-cost-badge free">🆓 Free</span>`
+        : ev.cost ? `<span class="event-cost-badge paid">💴 ${ev.cost}</span>` : "";
+      const recurBadge = ev.recurring ? `<span class="event-recurring-badge">🔁 Recurring</span>` : "";
 
       html += `
         <div class="card event-card" style="padding:0; overflow:hidden;">
-          <div class="event-img-wrapper">
+          <div class="event-img-wrapper" style="position:relative;">
             <img src="${ev.image}" alt="${ev.title}" class="event-img">
-            <span class="event-date-badge">${ev.date.split(" ")[0]}</span>
+            <span class="event-date-badge">${ev.date.split("—")[0].split("年")[0] ? ev.date.split(" ")[0] : ev.date.split("—")[0]}</span>
+            ${ev.category ? `<span class="event-category-badge" style="background:${catColor};">${ev.category}</span>` : ""}
           </div>
           <div class="event-body">
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+              ${costBadge}${recurBadge}
+            </div>
             <h3 class="event-title">${ev.title}</h3>
             <p class="event-desc">${ev.desc}</p>
             <div class="event-info-row">
               <span class="event-info-icon">📅</span>
-              <span><strong>日時:</strong> ${ev.date}</span>
+              <span><strong>When:</strong> ${ev.date}</span>
             </div>
             <div class="event-info-row">
               <span class="event-info-icon">📍</span>
-              <span><strong>場所:</strong> ${ev.location}</span>
+              <span><strong>Where:</strong> ${ev.location}</span>
             </div>
+            ${ev.cost ? `<div class="event-info-row">
+              <span class="event-info-icon">💴</span>
+              <span><strong>Cost:</strong> ${ev.cost}</span>
+            </div>` : ""}
             <div class="event-info-row" style="margin-bottom:12px;">
               <span class="event-info-icon">👥</span>
-              <span><strong>参加メンバー:</strong> ${count}名 (${ev.participants.join(", ")})</span>
+              <span><strong>Going:</strong> ${count} people${count > 0 ? ` (${ev.participants.join(", ")})` : ""}</span>
             </div>
             <button class="btn ${btnClass} btn-block join-event-btn" data-id="${ev.id}" ${isParticipating ? 'disabled' : ''}>${btnText}</button>
+            ${ev.createdBy ? `<p style="font-size:0.75rem; color:var(--color-text-muted); margin-top:8px; text-align:center;">Created by ${ev.createdBy}</p>` : ""}
           </div>
         </div>
       `;
     });
+
+    if (html === "") {
+      html = `<p class="text-muted" style="grid-column:1/-1; text-align:center; padding:40px;">No events yet. Be the first to create one!</p>`;
+    }
+
     listEl.innerHTML = html;
 
-    // イベント参加登録イベントアタッチ
+    // Join buttons
     document.querySelectorAll(".join-event-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         if (!user) {
-          alert("イベントへの参加申請にはログインが必要です。");
+          alert("Please sign in to join events.");
           window.location.hash = "#/login";
           return;
         }
-
-        const id = btn.getAttribute("data-id");
-        this.joinEvent(id);
+        this.joinEvent(btn.getAttribute("data-id"));
       });
     });
+
+    // Create event form submission
+    const createForm = document.getElementById("form-create-event");
+    if (createForm) {
+      createForm.onsubmit = (e) => {
+        e.preventDefault();
+        if (!user) { window.location.hash = "#/login"; return; }
+        const title    = document.getElementById("ev-title").value.trim();
+        const date     = document.getElementById("ev-date").value;
+        const location = document.getElementById("ev-location").value.trim();
+        const cost     = document.getElementById("ev-cost").value.trim() || "Free 🆓";
+        const category = document.getElementById("ev-category").value;
+        const desc     = document.getElementById("ev-desc").value.trim();
+        const photoUrl = document.getElementById("ev-photo").value.trim() ||
+                         "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=800";
+
+        const newEv = {
+          id: "event_" + Date.now(),
+          title, date, location, cost, category, desc,
+          image: photoUrl,
+          participants: [user.name],
+          createdBy: user.name
+        };
+        this.state.events.unshift(newEv);
+        this.awardXP(user, 20);
+        user.points += 20;
+        this.state.pointsHistory.unshift({ userId: user.id, action: `イベント作成: ${title}`, points: 20, date: new Date().toLocaleDateString() });
+        const idx = this.state.users.findIndex(u => u.id === user.id);
+        if (idx !== -1) this.state.users[idx] = user;
+        this.saveState();
+        createForm.reset();
+        if (createFormEl) createFormEl.classList.remove("active");
+        alert(`Event "${title}" created! You earned 20 pts.`);
+        this.renderEvents();
+      };
+    }
+
+    // Toggle create form
+    if (createBtn) {
+      createBtn.onclick = () => {
+        if (!user) { window.location.hash = "#/login"; return; }
+        if (createFormEl) createFormEl.classList.toggle("active");
+      };
+    }
+    const cancelCreate = document.getElementById("cancel-create-event");
+    if (cancelCreate) {
+      cancelCreate.onclick = () => {
+        if (createFormEl) createFormEl.classList.remove("active");
+      };
+    }
   }
 
   joinEvent(eventId) {
