@@ -497,7 +497,7 @@ class TunatomoApp {
       const email = document.getElementById("login-email").value;
       const pass = document.getElementById("login-password").value;
       
-      if ((email === "admin" || email === "admin@tunatomo.com") && pass === "admin") {
+      if (email === "admin@admin.com" && pass === "admin") {
         const adminUser = {
           id: "admin",
           email: "admin@tunatomo.com",
