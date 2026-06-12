@@ -16,19 +16,10 @@
   <style>
     /* Hide Google Translate top banner */
     .goog-te-banner-frame { display: none !important; }
+    .goog-te-banner-frame.skiptranslate { display: none !important; }
     body { top: 0 !important; }
-    .goog-te-gadget { font-size: 0 !important; }
-    .goog-te-gadget select {
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.8rem !important;
-      border: 1.5px solid var(--color-primary, #0d6efd);
-      border-radius: 8px;
-      padding: 5px 8px;
-      background: transparent;
-      color: var(--color-primary, #0d6efd);
-      cursor: pointer;
-      max-width: 130px;
-    }
+    .goog-te-gadget { font-size: 0 !important; color: transparent !important; }
+    .goog-logo-link { display: none !important; }
   </style>
 </head>
 <body class="lang-ja">
@@ -42,7 +33,7 @@
         <!-- ロゴ (二匹の魚の実画像) -->
         <a href="#/home" class="logo-area">
           <div class="logo-icon">
-            <img src="images/Tuna9.jpg" alt="つなともロゴ" class="logo-img" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-primary-light);">
+            <img src="images/Tuna9.jpg" alt="つなともロゴ" class="logo-img">
           </div>
           <div class="logo-text">
             <span class="logo-title">つなとも</span>

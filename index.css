@@ -316,6 +316,21 @@ textarea:focus {
   display: block;
 }
 
+.logo-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25), 0 0 0 3px rgba(13, 110, 253, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logo-area:hover .logo-img {
+  transform: scale(1.08) rotate(-3deg);
+  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.35), 0 0 0 4px rgba(13, 110, 253, 0.18);
+}
+
 .logo-text {
   display: flex;
   flex-direction: column;
@@ -2584,22 +2599,44 @@ body.lang-en .lang-ja {
 }
 
 /* ==========================================================================
-   Google Translate widget
+   Google Translate widget — frosted glass
    ========================================================================== */
 .gtranslate-widget {
   display: flex;
   align-items: center;
 }
-.gtranslate-widget select {
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.8rem;
-  border: 1.5px solid var(--color-primary);
-  border-radius: 8px;
-  padding: 5px 8px;
-  background: transparent;
-  color: var(--color-primary);
-  cursor: pointer;
-  max-width: 130px;
+
+.gtranslate-widget select,
+.goog-te-combo {
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  border: 1.5px solid rgba(13, 110, 253, 0.35) !important;
+  border-radius: 20px !important;
+  padding: 6px 12px !important;
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  color: var(--color-primary) !important;
+  cursor: pointer !important;
+  max-width: 140px !important;
+  box-shadow: 0 4px 16px rgba(13, 110, 253, 0.1), inset 0 1px 0 rgba(255,255,255,0.8) !important;
+  transition: all 0.2s ease !important;
+  outline: none !important;
+  appearance: auto;
+}
+
+.gtranslate-widget select:hover,
+.goog-te-combo:hover {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.18) !important;
+  transform: translateY(-1px);
+}
+
+/* Keep the lang-selector gap tidy */
+.lang-selector {
+  gap: 8px;
 }
 
 /* ==========================================================================
