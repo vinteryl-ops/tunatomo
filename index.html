@@ -12,8 +12,26 @@
   <link rel="stylesheet" href="index.css">
   <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="images/Tuna9.jpg">
+  <!-- Google Translate -->
+  <style>
+    /* Hide Google Translate top banner */
+    .goog-te-banner-frame { display: none !important; }
+    body { top: 0 !important; }
+    .goog-te-gadget { font-size: 0 !important; }
+    .goog-te-gadget select {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem !important;
+      border: 1.5px solid var(--color-primary, #0d6efd);
+      border-radius: 8px;
+      padding: 5px 8px;
+      background: transparent;
+      color: var(--color-primary, #0d6efd);
+      cursor: pointer;
+      max-width: 130px;
+    }
+  </style>
 </head>
-<body>
+<body class="lang-ja">
 
   <!-- アプリケーション・シェル -->
   <div id="app">
@@ -44,9 +62,10 @@
           <a href="#/admin" class="nav-link" data-page="admin" id="nav-admin" style="display:none;" data-t="nav-admin">管理画面</a>
         </nav>
 
-        <!-- 翻訳ボタン (日本語/English Toggle) -->
+        <!-- 翻訳ボタン (日本語/English Toggle + Google Translate) -->
         <div class="lang-selector">
           <button class="btn btn-outline btn-sm lang-toggle-btn" id="lang-toggle-btn" style="min-width: 80px;">English</button>
+          <div id="google_translate_element" class="gtranslate-widget"></div>
         </div>
 
         <!-- ユーザープロフィール・ステータスエリア -->
@@ -1247,7 +1266,160 @@
 
   </div>
 
+  <!-- ============================================== -->
+  <!-- ONBOARDING MODAL (shown after first signup)   -->
+  <!-- ============================================== -->
+  <div id="onboarding-overlay" class="onboarding-overlay" style="display:none;">
+    <div class="onboarding-modal">
+      <!-- Step indicators -->
+      <div class="onboarding-steps">
+        <div class="ob-step active" data-step="1"><span>1</span> Role</div>
+        <div class="ob-step-line"></div>
+        <div class="ob-step" data-step="2"><span>2</span> Photo</div>
+        <div class="ob-step-line"></div>
+        <div class="ob-step" data-step="3"><span>3</span> Details</div>
+      </div>
+
+      <!-- Step 1: Welcome + Role confirmation -->
+      <div class="ob-panel active" id="ob-panel-1">
+        <div class="ob-emoji">🎉</div>
+        <h2 class="ob-title">Welcome to Tunatomo!</h2>
+        <p class="ob-sub">Let's set up your profile in 3 quick steps so people can find and connect with you.</p>
+        <div class="ob-role-cards" id="ob-role-cards">
+          <label class="ob-role-card">
+            <input type="radio" name="ob-role" value="student_international" checked>
+            <div class="ob-role-content">
+              <span class="ob-role-icon">🌏</span>
+              <strong>International Student</strong>
+              <small>I'm studying here from abroad</small>
+            </div>
+          </label>
+          <label class="ob-role-card">
+            <input type="radio" name="ob-role" value="student_japanese">
+            <div class="ob-role-content">
+              <span class="ob-role-icon">🎌</span>
+              <strong>Japanese Supporter</strong>
+              <small>I want to help international students</small>
+            </div>
+          </label>
+          <label class="ob-role-card">
+            <input type="radio" name="ob-role" value="resident_local">
+            <div class="ob-role-content">
+              <span class="ob-role-icon">🏘️</span>
+              <strong>Local Resident</strong>
+              <small>I'm a community member</small>
+            </div>
+          </label>
+        </div>
+        <button class="btn btn-primary btn-block ob-next" data-next="2">Next →</button>
+      </div>
+
+      <!-- Step 2: Photo selection -->
+      <div class="ob-panel" id="ob-panel-2">
+        <div class="ob-emoji">📸</div>
+        <h2 class="ob-title">Choose Your Photo</h2>
+        <p class="ob-sub">Pick a profile picture that represents you.</p>
+        <div class="ob-avatar-grid">
+          <label class="ob-avatar-option">
+            <input type="radio" name="ob-avatar" value="images/Tuna1.jpg" checked>
+            <img src="images/Tuna1.jpg" alt="Photo 1">
+            <div class="ob-avatar-check">✓</div>
+          </label>
+          <label class="ob-avatar-option">
+            <input type="radio" name="ob-avatar" value="images/Tuna2.jpg">
+            <img src="images/Tuna2.jpg" alt="Photo 2">
+            <div class="ob-avatar-check">✓</div>
+          </label>
+          <label class="ob-avatar-option">
+            <input type="radio" name="ob-avatar" value="images/Tuna3.jpg">
+            <img src="images/Tuna3.jpg" alt="Photo 3">
+            <div class="ob-avatar-check">✓</div>
+          </label>
+          <label class="ob-avatar-option">
+            <input type="radio" name="ob-avatar" value="images/Tuna4.jpg">
+            <img src="images/Tuna4.jpg" alt="Photo 4">
+            <div class="ob-avatar-check">✓</div>
+          </label>
+          <label class="ob-avatar-option">
+            <input type="radio" name="ob-avatar" value="images/Tuna9.jpg">
+            <img src="images/Tuna9.jpg" alt="Photo 5">
+            <div class="ob-avatar-check">✓</div>
+          </label>
+        </div>
+        <div class="ob-btn-row">
+          <button class="btn btn-outline ob-back" data-back="1">← Back</button>
+          <button class="btn btn-primary ob-next" data-next="3">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Details -->
+      <div class="ob-panel" id="ob-panel-3">
+        <div class="ob-emoji">📝</div>
+        <h2 class="ob-title">Your Details</h2>
+        <p class="ob-sub">Tell the community a bit about yourself.</p>
+        <div class="ob-form">
+          <div class="form-group">
+            <label for="ob-college">College / カレッジ</label>
+            <select id="ob-college">
+              <option value="">Select your college</option>
+              <option value="APS">APS – Asia Pacific Studies</option>
+              <option value="APM">APM – Asia Pacific Management</option>
+              <option value="ST">ST – Sustainability Tourism</option>
+              <option value="Other">Other / その他</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ob-semester">Semester / セメスター</label>
+            <select id="ob-semester">
+              <option value="">Select semester</option>
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+              <option value="3">Semester 3</option>
+              <option value="4">Semester 4</option>
+              <option value="5">Semester 5</option>
+              <option value="6">Semester 6</option>
+              <option value="7">Semester 7</option>
+              <option value="8">Semester 8</option>
+              <option value="Pass out">Pass out (Graduated)</option>
+              <option value="Coming">Coming semester</option>
+            </select>
+          </div>
+          <div class="form-group" id="ob-country-group">
+            <label for="ob-country">Country of Origin / 出身国</label>
+            <input type="text" id="ob-country" placeholder="e.g. Vietnam, USA, Korea">
+          </div>
+          <div class="form-group">
+            <label for="ob-bio">Short Bio / 自己紹介</label>
+            <textarea id="ob-bio" rows="3" placeholder="Hi! I'm from... I love..."></textarea>
+          </div>
+        </div>
+        <div class="ob-btn-row">
+          <button class="btn btn-outline ob-back" data-back="2">← Back</button>
+          <button class="btn btn-primary" id="ob-finish-btn">🎉 Start Using Tunatomo!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- JavaScript App Logic -->
   <script src="app.js"></script>
+
+  <!-- Google Translate -->
+  <div id="google_translate_element" style="display:none;"></div>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement(
+        { pageLanguage: 'ja', includedLanguages: 'en,ja,zh-CN,ko,vi,th,id,fr,de,es,ar', layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
+        'google_translate_element'
+      );
+      // Move the select into the header widget after init
+      setTimeout(() => {
+        const select = document.querySelector('.goog-te-combo');
+        const target = document.querySelector('.gtranslate-widget');
+        if (select && target) target.appendChild(select);
+      }, 800);
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>

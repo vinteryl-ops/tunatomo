@@ -588,18 +588,21 @@ class TunatomoApp {
 
       this.state.users.push(newUser);
       this.state.currentUser = newUser;
-      
+
       // ポイント履歴登録
       this.state.pointsHistory.push({
         userId: newUser.id,
-        action: "新規登録ボーナス",
+        action: "新規登録ボーナス / Sign-up Bonus",
         points: 50,
         date: new Date().toLocaleDateString()
       });
 
       this.saveState();
-      alert(`アカウントを作成しました！新規登録ボーナスとして50ポイント獲得しました。`);
-      window.location.hash = "#/profile";
+      this.updateHeader();
+
+      // Launch onboarding instead of going straight to profile
+      window.location.hash = "#/home";
+      setTimeout(() => initOnboarding(this, newUser), 100);
     });
 
     // プロフィール編集・キャンセル
@@ -2457,6 +2460,75 @@ class TunatomoApp {
     msgHtml += "</div>";
     detailPanel.innerHTML = msgHtml;
   }
+}
+
+// ==========================================================================
+// ONBOARDING FLOW
+// ==========================================================================
+function initOnboarding(app, user) {
+  const overlay = document.getElementById("onboarding-overlay");
+  if (!overlay) return;
+  overlay.style.display = "flex";
+
+  // Pre-select role radio based on user role
+  const roleRadio = document.querySelector(`input[name="ob-role"][value="${user.role}"]`);
+  if (roleRadio) roleRadio.checked = true;
+
+  // Toggle country field based on role
+  function updateCountryField() {
+    const role = document.querySelector('input[name="ob-role"]:checked')?.value;
+    const cg = document.getElementById("ob-country-group");
+    if (cg) cg.style.display = role === "student_international" ? "block" : "none";
+  }
+  document.querySelectorAll('input[name="ob-role"]').forEach(r => r.addEventListener("change", updateCountryField));
+  updateCountryField();
+
+  // Step navigation helpers
+  function goToStep(n) {
+    document.querySelectorAll(".ob-panel").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".ob-step").forEach((s, i) => {
+      s.classList.remove("active", "done");
+      if (i + 1 < n) s.classList.add("done");
+      if (i + 1 === n) s.classList.add("active");
+    });
+    document.getElementById(`ob-panel-${n}`).classList.add("active");
+  }
+
+  document.querySelectorAll(".ob-next").forEach(btn => {
+    btn.onclick = () => goToStep(parseInt(btn.dataset.next));
+  });
+  document.querySelectorAll(".ob-back").forEach(btn => {
+    btn.onclick = () => goToStep(parseInt(btn.dataset.back));
+  });
+
+  // Finish button
+  document.getElementById("ob-finish-btn").onclick = () => {
+    // Save all onboarding data to the user
+    const role = document.querySelector('input[name="ob-role"]:checked')?.value || user.role;
+    const avatar = document.querySelector('input[name="ob-avatar"]:checked')?.value || user.avatar;
+    const college = document.getElementById("ob-college").value;
+    const semester = document.getElementById("ob-semester").value;
+    const country = document.getElementById("ob-country").value;
+    const bio = document.getElementById("ob-bio").value;
+
+    user.role = role;
+    user.avatar = avatar;
+    if (college) user.college = college;
+    if (semester) user.semester = semester;
+    if (country) user.country = country;
+    if (bio) user.bio = bio;
+    user.onboardingDone = true;
+
+    // Sync into users list
+    const idx = app.state.users.findIndex(u => u.id === user.id);
+    if (idx !== -1) app.state.users[idx] = user;
+    app.state.currentUser = user;
+    app.saveState();
+
+    overlay.style.display = "none";
+    app.updateHeader();
+    window.location.hash = "#/profile";
+  };
 }
 
 // 起動

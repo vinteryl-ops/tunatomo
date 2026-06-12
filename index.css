@@ -2572,3 +2572,309 @@ body.lang-en .lang-ja {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================================================
+   Google Translate widget
+   ========================================================================== */
+.gtranslate-widget {
+  display: flex;
+  align-items: center;
+}
+.gtranslate-widget select {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 8px;
+  padding: 5px 8px;
+  background: transparent;
+  color: var(--color-primary);
+  cursor: pointer;
+  max-width: 130px;
+}
+
+/* ==========================================================================
+   ONBOARDING MODAL
+   ========================================================================== */
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 40, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+.onboarding-modal {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Step indicators */
+.onboarding-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 32px;
+}
+.ob-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  min-width: 64px;
+}
+.ob-step span {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+.ob-step.active {
+  color: var(--color-primary);
+}
+.ob-step.active span {
+  background: var(--gradient-ocean);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(13,110,253,0.35);
+}
+.ob-step.done span {
+  background: var(--color-accent);
+  color: #fff;
+}
+.ob-step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--color-border);
+  margin-bottom: 18px;
+}
+
+/* Panels */
+.ob-panel { display: none; }
+.ob-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+.ob-emoji { font-size: 2.5rem; text-align: center; margin-bottom: 8px; }
+.ob-title { font-size: 1.5rem; font-weight: 900; color: var(--color-text-dark); text-align: center; margin-bottom: 8px; }
+.ob-sub { font-size: 0.9rem; color: var(--color-text-muted); text-align: center; margin-bottom: 24px; }
+
+/* Role cards */
+.ob-role-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.ob-role-card {
+  cursor: pointer;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+.ob-role-card input { display: none; }
+.ob-role-card:has(input:checked) {
+  border-color: var(--color-primary);
+  background: linear-gradient(135deg, rgba(13,110,253,0.05), rgba(0,163,255,0.05));
+  box-shadow: 0 4px 16px rgba(13,110,253,0.15);
+}
+.ob-role-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+}
+.ob-role-icon { font-size: 1.8rem; }
+.ob-role-content strong { display: block; font-size: 1rem; font-weight: 800; color: var(--color-text-dark); }
+.ob-role-content small { font-size: 0.8rem; color: var(--color-text-muted); }
+
+/* Avatar grid */
+.ob-avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.ob-avatar-option {
+  position: relative;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+.ob-avatar-option input { display: none; }
+.ob-avatar-option img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+  border-radius: calc(var(--radius-sm) - 3px);
+}
+.ob-avatar-option:has(input:checked) {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 14px rgba(13,110,253,0.3);
+}
+.ob-avatar-check {
+  position: absolute;
+  top: 4px; right: 4px;
+  width: 20px; height: 20px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+.ob-avatar-option:has(input:checked) .ob-avatar-check { display: flex; }
+
+.ob-form { margin-bottom: 20px; }
+.ob-btn-row {
+  display: flex;
+  gap: 12px;
+}
+.ob-btn-row .btn { flex: 1; }
+
+/* ==========================================================================
+   MOBILE OPTIMIZATIONS
+   ========================================================================== */
+
+/* Ensure header doesn't overflow on small screens */
+@media (max-width: 768px) {
+  .lang-selector { display: none; }
+
+  .header-container {
+    padding: 10px 16px;
+  }
+
+  /* Hero full height on mobile */
+  .hero-section {
+    height: 100svh;
+    min-height: 500px;
+  }
+
+  .slide-content {
+    margin: 0 16px;
+    padding: 24px 20px;
+  }
+
+  .hero-title { font-size: 1.6rem; }
+  .hero-description { font-size: 0.95rem; }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hero-actions .btn { width: 100%; justify-content: center; }
+
+  /* Quick grid 2 cols on mobile */
+  .quick-grid {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: -24px;
+    gap: 10px;
+  }
+  .quick-card { padding: 16px; gap: 10px; }
+  .quick-card-body h3 { font-size: 1rem; }
+
+  /* Chat layout stack on mobile */
+  .chat-layout {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+  .chat-sidebar { max-height: 250px; overflow-y: auto; }
+  .chat-main { min-height: 400px; }
+
+  /* Board stack */
+  .board-container { grid-template-columns: 1fr; padding: 12px; }
+
+  /* Booking */
+  .booking-wrapper { margin: 16px auto; }
+  .booking-form-card { padding: 24px 16px; }
+
+  /* Profile */
+  .profile-container { padding: 12px; gap: 16px; }
+  .profile-header { padding: 20px 16px; }
+  .profile-body-grid { grid-template-columns: 1fr; gap: 16px; }
+  .profile-info-row { grid-template-columns: 120px 1fr; }
+
+  /* Events */
+  .events-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  /* Matching */
+  .matching-container { grid-template-columns: 1fr; padding: 12px; gap: 16px; }
+  .supporters-grid { grid-template-columns: 1fr; }
+
+  /* Info guide */
+  .info-layout { grid-template-columns: 1fr; padding: 12px; gap: 16px; }
+
+  /* Game */
+  .game-container { grid-template-columns: 1fr; padding: 12px; }
+
+  /* Admin */
+  .admin-tabs { flex-wrap: wrap; }
+  .admin-tab-btn { font-size: 0.8rem; padding: 8px 12px; }
+
+  /* Content container padding */
+  .content-container { padding: 16px 12px; }
+
+  /* Footer */
+  .footer-container { flex-direction: column; gap: 20px; }
+
+  /* Onboarding modal */
+  .onboarding-modal { padding: 28px 20px; }
+  .ob-avatar-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .ob-avatar-grid .ob-avatar-option:nth-child(4),
+  .ob-avatar-grid .ob-avatar-option:nth-child(5) { display: block; }
+}
+
+@media (max-width: 480px) {
+  .quick-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+  .global-header {
+    top: 8px;
+    width: calc(100% - 16px);
+    border-radius: 20px;
+  }
+
+  .main-content { padding-top: 80px; }
+
+  .logo-title { font-size: 1.1rem; }
+  .logo-subtitle { display: none; }
+
+  /* Supporter card compact */
+  .supporter-card-top { flex-direction: row; }
+  .supporter-avatar { width: 56px; height: 56px; }
+
+  /* Auth container */
+  .auth-container { margin: 20px auto; padding: 24px 16px; }
+
+  /* Onboarding */
+  .onboarding-modal { padding: 24px 16px; }
+  .ob-title { font-size: 1.25rem; }
+  .ob-avatar-grid { grid-template-columns: repeat(3, 1fr); }
+
+  /* Home fish banner */
+  .home-fish-banner { grid-template-columns: 1fr; gap: 16px; }
+  .aquarium-preview { height: 140px; }
+}
