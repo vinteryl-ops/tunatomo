@@ -1344,6 +1344,51 @@ textarea:focus {
   color: #7c3aed;
 }
 
+/* ==========================================================================
+   Tier Badges — Tuna / Shark / Whale / Golden Whale
+   ========================================================================== */
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  border: 1.5px solid transparent;
+  white-space: nowrap;
+}
+
+.tier-tuna {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+.tier-shark {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-color: #93c5fd;
+}
+
+.tier-whale {
+  background: #ede9fe;
+  color: #6d28d9;
+  border-color: #a5b4fc;
+}
+
+.tier-golden-whale {
+  background: linear-gradient(135deg, #fef9c3, #fde68a);
+  color: #92400e;
+  border-color: #fcd34d;
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.45);
+  animation: golden-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes golden-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(250, 204, 21, 0.4); }
+  50%       { box-shadow: 0 0 18px rgba(250, 204, 21, 0.75); }
+}
+
 .event-body {
   padding: 20px;
   flex: 1;

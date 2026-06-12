@@ -363,13 +363,17 @@
                 <img id="profile-display-avatar" src="images/Tuna1.jpg" alt="プロフィール写真" class="profile-avatar-img">
               </div>
               <div class="profile-meta-top">
-                <span id="profile-display-badge" class="badge">日本人学生</span>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px;">
+                  <span id="profile-display-badge" class="badge">日本人学生</span>
+                  <span id="profile-tier-badge"></span>
+                </div>
                 <h1 id="profile-display-name">ゲストユーザー</h1>
                 <p id="profile-display-email" class="text-muted">guest@example.com</p>
                 <div class="profile-points-display">
                   <span class="points-label">保有ポイント:</span>
-                  <span id="profile-display-points" class="points-val">0</span><span> pt</span>
+                  <span id="profile-display-points" class="points-val">0</span><span> 🐟 pt</span>
                 </div>
+                <div id="profile-tier-progress"></div>
               </div>
             </div>
           </div>
@@ -1017,6 +1021,10 @@
               <h2 id="game-fish-name">マイフィッシュ</h2>
               <div class="level-badge-wrapper">
                 <span>Lv.</span><span id="game-fish-level">1</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px;">
+                <span id="game-tier-badge"></span>
+                <span id="game-tier-next"></span>
               </div>
             </div>
 

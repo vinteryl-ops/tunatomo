@@ -7,6 +7,26 @@ const BLACKLIST_WORDS = [
   "nigga","nigger","niggas","niggers","pajeet","pajeets","chink","kike","spic","wetback","raghead","sandnigger","coon","cracker","faggot","fag","retard","tranny","dyke","whore","slut"
 ];
 
+// Tier system based on cumulative XP (totalXP)
+const TIERS = [
+  { name: "Golden Whale", emoji: "🏆", min: 1000, color: "#f59e0b", bg: "#fef9c3", border: "#fcd34d", css: "tier-golden-whale" },
+  { name: "Whale",        emoji: "🐋", min: 500,  color: "#6366f1", bg: "#ede9fe", border: "#a5b4fc", css: "tier-whale" },
+  { name: "Shark",        emoji: "🦈", min: 200,  color: "#0D6EFD", bg: "#dbeafe", border: "#93c5fd", css: "tier-shark" },
+  { name: "Tuna",         emoji: "🐟", min: 0,    color: "#16a34a", bg: "#dcfce7", border: "#86efac", css: "tier-tuna" }
+];
+
+function getTier(user) {
+  const xp = user.totalXP || user.points || 0;
+  return TIERS.find(t => xp >= t.min) || TIERS[TIERS.length - 1];
+}
+
+function tierBadgeHTML(user, size = "sm") {
+  const t = getTier(user);
+  const pad = size === "lg" ? "8px 18px" : "4px 10px";
+  const fs  = size === "lg" ? "0.9rem" : "0.72rem";
+  return `<span class="tier-badge ${t.css}" style="padding:${pad};font-size:${fs};">${t.emoji} ${t.name}</span>`;
+}
+
 function containsBlacklist(text) {
   const lower = text.toLowerCase();
   return BLACKLIST_WORDS.some(w => {
@@ -1145,6 +1165,7 @@ class TunatomoApp {
             : (isEn ? "Local Resident" : "地域住民");
       const badgeClass = user.role === "admin" ? "badge-admin" : user.role === "student_international" ? "badge-student-intl" : user.role === "student_japanese" ? "badge-student-jp" : "badge-resident";
 
+      const tier = getTier(user);
       const html = `
         <div class="header-user-badge">
           <a href="#/profile">
@@ -1153,9 +1174,9 @@ class TunatomoApp {
           <div class="header-user-meta">
             <span class="header-username">${user.name}</span>
             <div class="header-points-level">
-              <span class="badge ${badgeClass}" style="transform: scale(0.85); margin-left:-5px;">${roleText}</span>
+              <span class="tier-badge ${tier.css}" style="padding:2px 8px;font-size:0.68rem;">${tier.emoji} ${tier.name}</span>
               <span class="header-level-val">Lv.${user.level || 1}</span>
-              <a href="#/game" class="header-points-val">${user.points || 0} pt</a>
+              <a href="#/game" class="header-points-val">${user.points || 0} 🐟</a>
             </div>
           </div>
         </div>
@@ -1287,10 +1308,34 @@ class TunatomoApp {
     document.getElementById("profile-display-name").innerText = user.name;
     document.getElementById("profile-display-email").innerText = user.email;
     document.getElementById("profile-display-points").innerText = user.points;
-    
+
     const badgeEl = document.getElementById("profile-display-badge");
     badgeEl.innerText = user.role === "student_international" ? "国際学生" : user.role === "student_japanese" ? "日本人学生" : "地域住民";
     badgeEl.className = "badge " + (user.role === "student_international" ? "badge-student-intl" : user.role === "student_japanese" ? "badge-student-jp" : "badge-resident");
+
+    // Tier badge
+    const tierContainer = document.getElementById("profile-tier-badge");
+    if (tierContainer) tierContainer.innerHTML = tierBadgeHTML(user, "lg");
+
+    // Tier progress info
+    const tier = getTier(user);
+    const xp = user.totalXP || user.points || 0;
+    const nextTier = TIERS[TIERS.indexOf(tier) - 1];
+    const tierProgressEl = document.getElementById("profile-tier-progress");
+    if (tierProgressEl) {
+      if (nextTier) {
+        const pct = Math.min(100, Math.round(((xp - tier.min) / (nextTier.min - tier.min)) * 100));
+        tierProgressEl.innerHTML = `
+          <div style="font-size:0.8rem;color:var(--color-text-muted);margin-top:6px;">
+            ${xp} / ${nextTier.min} XP to ${nextTier.emoji} ${nextTier.name}
+            <div style="height:6px;background:#e5e7eb;border-radius:99px;margin-top:4px;">
+              <div style="height:100%;width:${pct}%;background:${tier.color};border-radius:99px;transition:width 0.5s;"></div>
+            </div>
+          </div>`;
+      } else {
+        tierProgressEl.innerHTML = `<div style="font-size:0.8rem;color:${tier.color};font-weight:700;margin-top:6px;">🏆 Max Tier Reached!</div>`;
+      }
+    }
 
     // 詳細表示用HTMLの組み立て
     const infoShowEl = document.getElementById("profile-info-show");
@@ -1486,12 +1531,16 @@ class TunatomoApp {
         : (isEn ? "Local Resident" : "地域住民");
       const badgeClass = sup.role === "student_japanese" ? "badge-student-jp" : "badge-resident";
 
+      const supTier = getTier(sup);
       html += `
         <div class="card supporter-card">
           <div class="supporter-card-top">
             <img src="${sup.avatar || 'images/Tuna1.jpg'}" alt="${sup.name}" class="supporter-avatar">
             <div class="supporter-meta">
-              <span class="badge ${badgeClass}" style="width: fit-content; margin-bottom:4px;">${roleText}</span>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
+                <span class="badge ${badgeClass}" style="width:fit-content;">${roleText}</span>
+                <span class="tier-badge ${supTier.css}" style="padding:3px 9px;font-size:0.68rem;">${supTier.emoji} ${supTier.name}</span>
+              </div>
               <h3>${sup.name}</h3>
               <span class="uni">${sup.university || (isEn ? "Local Supporter" : "地域サポーター")}</span>
             </div>
@@ -1893,6 +1942,19 @@ class TunatomoApp {
     // 魚の情報描画
     document.getElementById("game-fish-name").innerText = user.fishName || `${user.name}のサカナ`;
     document.getElementById("game-fish-level").innerText = user.level || 1;
+
+    // Tier display on game page
+    const gameTierEl = document.getElementById("game-tier-badge");
+    if (gameTierEl) gameTierEl.innerHTML = tierBadgeHTML(user, "lg");
+    const gameTierNextEl = document.getElementById("game-tier-next");
+    if (gameTierNextEl) {
+      const t = getTier(user);
+      const xp = user.totalXP || user.points || 0;
+      const next = TIERS[TIERS.indexOf(t) - 1];
+      gameTierNextEl.innerHTML = next
+        ? `<span style="font-size:0.8rem;color:var(--color-text-muted);">${xp} XP · Next tier: ${next.emoji} ${next.name} at ${next.min} XP</span>`
+        : `<span style="font-size:0.8rem;color:#f59e0b;font-weight:700;">🏆 Maximum tier reached!</span>`;
+    }
     
     // XP計算とレベルバー (based on totalXP)
     const totalXP = user.totalXP || user.points || 0;
