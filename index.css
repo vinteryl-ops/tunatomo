@@ -279,103 +279,129 @@ textarea:focus {
 /* ==========================================================================
    3. グローバルヘッダー
    ========================================================================== */
+/* ─── HEADER: transparent wrapper, 3 floating pills inside ─── */
 .global-header {
   position: fixed;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 32px);
-  max-width: 1200px;
+  top: 12px;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 50px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), var(--shadow-glass);
-  transition: background 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  background: none;
+  border: none;
+  box-shadow: none;
+  pointer-events: none; /* let clicks fall through gaps between pills */
 }
 
+/* shared glass-pill mixin */
 .header-container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 8px 24px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  pointer-events: none;
 }
 
-/* ロゴ */
+/* Each pill re-enables pointer events */
+.logo-area,
+.desktop-nav,
+.lang-selector,
+.user-status-area,
+.mobile-menu-toggle {
+  pointer-events: all;
+}
+
+/* glass pill shared style */
+.logo-area,
+.desktop-nav,
+.user-status-area {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border: 1px solid rgba(255,255,255,0.45);
+  border-radius: 50px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* ロゴ pill */
 .logo-area {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 6px 14px 6px 8px;
+  text-decoration: none;
+  flex-shrink: 0;
 }
 
-.logo-icon svg {
-  display: block;
-}
+.logo-icon svg { display: block; }
 
 .logo-img {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25), 0 0 0 3px rgba(13, 110, 253, 0.12);
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 3px 10px rgba(13,110,253,0.22);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .logo-area:hover .logo-img {
   transform: scale(1.08) rotate(-3deg);
-  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.35), 0 0 0 4px rgba(13, 110, 253, 0.18);
+  box-shadow: 0 6px 18px rgba(13,110,253,0.32);
 }
 
-.logo-text {
-  display: flex;
-  flex-direction: column;
-}
+.logo-text { display: flex; flex-direction: column; }
 
 .logo-title {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 900;
   color: var(--color-primary);
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
+  line-height: 1.1;
 }
 
 .logo-subtitle {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 700;
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-/* デスクトップナビ */
+/* Nav pill */
 .desktop-nav {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 2px;
+  padding: 5px 10px;
 }
 
 .nav-link {
   color: var(--color-text-dark);
   font-weight: 700;
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  font-size: 0.95rem;
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
 }
 
 .nav-link:hover,
 .nav-link.active {
   color: var(--color-primary);
-  background-color: var(--color-bg-light);
+  background-color: rgba(13,110,253,0.10);
 }
 
-/* ユーザーステータスエリア */
+/* User status pill */
 .user-status-area {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
+  padding: 5px 12px;
+  flex-shrink: 0;
 }
 
 .header-user-badge {
@@ -531,9 +557,10 @@ textarea:focus {
 .slide-content {
   position: relative;
   z-index: 3;
-  max-width: 650px;
+  max-width: 600px;
   margin-left: 10%;
-  padding: 40px;
+  margin-top: 60px; /* push below header pills */
+  padding: 36px 40px;
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
