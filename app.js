@@ -503,13 +503,13 @@ class TunatomoApp {
           email: "admin@tunatomo.com",
           name: "Admin",
           role: "admin",
-          avatar: "images/Tuna9.jpg",
+          avatar: "images/Tuna11.jpg",
           points: 9999,
           level: 99,
           fishName: "キングシャーク",
           fishColor: "#ff0000",
           fishTailColor: "#990000",
-          activeFishModel: "images/Tuna9.jpg",
+          activeFishModel: "images/Tuna11.jpg",
           unlockedItems: [],
           equippedItems: { hat: null, glasses: null, clothing: null, accessory: null },
           agreedToChatRules: true
@@ -1074,8 +1074,9 @@ class TunatomoApp {
 
   // 6. ホーム画面の描画
   renderHome() {
-    // お知らせ一覧
+    // Guard: only run if home DOM elements are present
     const announceEl = document.getElementById("home-announcements");
+    if (!announceEl) return;
     let announceHtml = "";
     DEFAULT_ANNOUNCEMENTS.forEach(ann => {
       announceHtml += `
