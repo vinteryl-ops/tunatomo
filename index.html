@@ -19,23 +19,10 @@
     <!-- グローバルヘッダー -->
     <header class="global-header">
       <div class="header-container">
-        <!-- ロゴ (2匹の魚のSVG) -->
+        <!-- ロゴ (二匹の魚の実画像) -->
         <a href="#/home" class="logo-area">
           <div class="logo-icon">
-            <svg viewBox="0 0 100 100" width="48" height="48">
-              <!-- 水滴/泡の背景 -->
-              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(0, 163, 255, 0.2)" stroke-width="2"/>
-              <!-- 青い魚 -->
-              <path d="M 30,50 C 40,35 60,35 70,50 C 60,65 40,65 30,50 Z" fill="#0D6EFD"/>
-              <path d="M 70,50 L 80,42 L 77,50 L 80,58 Z" fill="#0D6EFD"/>
-              <circle cx="42" cy="47" r="2" fill="#fff"/>
-              <!-- 水色の魚 (回転させて交差させる) -->
-              <g transform="rotate(45, 50, 50)">
-                <path d="M 30,50 C 40,35 60,35 70,50 C 60,65 40,65 30,50 Z" fill="#00A3FF" opacity="0.9"/>
-                <path d="M 70,50 L 80,42 L 77,50 L 80,58 Z" fill="#00A3FF" opacity="0.9"/>
-                <circle cx="42" cy="47" r="2" fill="#fff"/>
-              </g>
-            </svg>
+            <img src="images/Vinit.jpg" alt="つなともロゴ" class="logo-img" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-primary-light);">
           </div>
           <div class="logo-text">
             <span class="logo-title">つなとも</span>
@@ -88,19 +75,20 @@
       <!-- 1. ホームビュー (#/home) -->
       <!-- ============================================== -->
       <section id="view-home" class="app-view active">
-        <!-- ヒーローセクション -->
+        <!-- ヒーローセクション (ビデオ背景) -->
         <div class="hero-section">
-          <div class="hero-slider">
-            <div class="slide-item" style="background-image: linear-gradient(rgba(13, 110, 253, 0.4), rgba(0, 0, 0, 0.6)), url('images/img_slider_pc_20.jpg');">
-              <div class="slide-content">
-                <span class="hero-badge">多文化共生プラットフォーム</span>
-                <h1 class="hero-title">日本での新しい生活を、仲間と共に。</h1>
-                <p class="hero-description">「つなとも」は、日本に住む国際学生と、日本人学生や地域住民がつながり、支え合うためのマッチング・コミュニティサービスです。</p>
-                <div class="hero-actions">
-                  <a href="#/matching" class="btn btn-light btn-lg">サポーターを探す</a>
-                  <a href="#/booking" class="btn btn-primary btn-lg">同行サポートを予約</a>
-                </div>
-              </div>
+          <video class="hero-video-bg" autoplay loop muted playsinline>
+            <source src="12755545_1920_1080_30fps.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <div class="hero-overlay"></div>
+          <div class="slide-content">
+            <span class="hero-badge">多文化共生プラットフォーム</span>
+            <h1 class="hero-title">日本での新しい生活を、仲間と共に。</h1>
+            <p class="hero-description">「つなとも」は、日本に住む国際学生と、日本人学生や地域住民がつながり、支え合うためのマッチング・コミュニティサービスです。</p>
+            <div class="hero-actions">
+              <a href="#/matching" class="btn btn-light btn-lg">サポーターを探す</a>
+              <a href="#/booking" class="btn btn-primary btn-lg">同行サポートを予約</a>
             </div>
           </div>
         </div>
@@ -208,10 +196,8 @@
             </div>
             <div class="line-promo-qr">
               <div class="qr-box">
-                <!-- SVGによる美しいモックQRコード -->
-                <svg width="120" height="120" viewBox="0 0 100 100" fill="#06C755">
-                  <path d="M0,0h30v30h-30z M10,10h10v10h-10z M70,0h30v30h-30z M80,10h10v10h-10z M0,70h30v30h-30z M10,80h10v10h-10z M40,10h10v10h-10z M50,20h10v10h-10z M30,40h10v10h-10z M40,50h10v10h-10z M50,40h10v10h-10z M70,40h10v10h-10z M80,50h10v10h-10z M60,60h10v10h-10z M70,70h10v10h-10z M90,80h10v20h-20z M40,80h10v10h-10z M50,90h10v10h-10z" />
-                </svg>
+                <!-- 実物のLINE QRコード画像 -->
+                <img src="images/Vinit3.jpg" alt="つなとも公式LINE QRコード" style="width: 120px; height: 120px; object-fit: contain; border-radius: 8px;">
                 <span>つなとも公式LINE</span>
               </div>
             </div>
@@ -624,7 +610,7 @@
             <!-- 各項目の中身はJSでロードするか、HTML直書きして切り替え -->
             <!-- 初期表示: 市役所手続き -->
             <div class="info-tab-content active" id="info-city-hall">
-              <div class="info-header-img" style="background-image: linear-gradient(rgba(13, 110, 253, 0.2), rgba(13, 110, 253, 0.8)), url('images/img_slider_pc_20.jpg');">
+              <div class="info-header-img" style="background-image: linear-gradient(rgba(13, 110, 253, 0.2), rgba(13, 110, 253, 0.8)), url('images/Vinit2.jpg');">
                 <h1>市役所手続き</h1>
               </div>
               <div class="info-body">
@@ -667,12 +653,8 @@
 
             <!-- 国民健康保険 -->
             <div class="info-tab-content" id="info-health-insurance">
-              <div class="info-body">
-                <h2>国民健康保険 (National Health Insurance)</h2>
-                <p>日本に滞在するすべての留学生は、国民健康保険に加入する義務があります。加入すると、病気や怪我で病院に行った際の自己負担額が<strong>3割（30%）</strong>になります。</p>
-                <h3>ポイント</h3>
-                <ul>
-                  <li><strong>加入方法:</strong> 住民登録を行う際に、同じ区役所・市役所の「保険年金課」で同時に手続きできます。</li>
+                            <!-- 魚のベースボディ (実画像キャラクター) -->
+                 <img id="fish-body-img" src="images/Vinit4.jpg" alt="マイフィッシュ" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid #fff; box-shadow: var(--shadow-lg);">住民登録を行う際に、同じ区役所・市役所の「保険年金課」で同時に手続きできます。</li>
                   <li><strong>保険料:</strong> 留学生は前年の所得がないため、申請することで保険料が大幅に減額されます（月額1,500円〜2,000円程度になります）。</li>
                 </ul>
               </div>
@@ -832,7 +814,19 @@
 
             <!-- クローゼットパネル -->
             <div class="shop-panel active" id="panel-closet">
-              <p class="panel-subtitle">持っているアイテムを装備できます。</p>
+              <p class="panel-subtitle">お魚の見た目や表情、背景シーンを変更できます。</p>
+              <div class="form-group" style="margin-bottom: 24px;">
+                <label for="select-fish-model">お魚のキャラクター・シーンを選択</label>
+                <select id="select-fish-model" style="max-width: 300px;">
+                  <option value="images/Tuna3.jpg">笑顔（アップ）</option>
+                  <option value="images/Vinit4.jpg">スマホ操作中</option>
+                  <option value="images/Tuna6.jpg">キャンパス（挨拶）</option>
+                  <option value="images/Tuna4.jpg">クッキング（料理中）</option>
+                  <option value="images/Tuna5.jpg">寂しい（しょんぼり）</option>
+                  <option value="images/Vinit5.jpg">お悩み中（困り顔）</option>
+                </select>
+              </div>
+              <p class="panel-subtitle" style="border-top: 1px solid var(--color-border); padding-top: 16px;">持っているアイテムを装備できます。</p>
               <div class="locker-grid" id="closet-grid">
                 <!-- JSで所持アイテムを動的生成 -->
               </div>

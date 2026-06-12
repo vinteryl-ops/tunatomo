@@ -169,6 +169,7 @@ class TunatomoApp {
         fishName: "マリーフィッシュ",
         fishColor: "#ff7e5f",
         fishTailColor: "#ff7e5f",
+        activeFishModel: "images/Tuna3.jpg",
         unlockedItems: ["nerd_glasses"],
         equippedItems: { hat: null, glasses: "nerd_glasses", clothing: null, accessory: null }
       },
@@ -191,6 +192,7 @@ class TunatomoApp {
         fishName: "ユズフィッシュ",
         fishColor: "#0D6EFD",
         fishTailColor: "#00A3FF",
+        activeFishModel: "images/Tuna6.jpg",
         unlockedItems: ["straw_hat"],
         equippedItems: { hat: "straw_hat", glasses: null, clothing: null, accessory: null }
       }
@@ -248,6 +250,7 @@ class TunatomoApp {
           fishName: `${sup.name}のサカナ`,
           fishColor: "#00A3FF",
           fishTailColor: "#0d6efd",
+          activeFishModel: "images/Tuna3.jpg",
           unlockedItems: [],
           equippedItems: { hat: null, glasses: null, clothing: null, accessory: null }
         });
@@ -401,6 +404,7 @@ class TunatomoApp {
         fishName: `${name}のサカナ`,
         fishColor: "#0D6EFD",
         fishTailColor: "#00A3FF",
+        activeFishModel: "images/Tuna3.jpg",
         unlockedItems: [],
         equippedItems: { hat: null, glasses: null, clothing: null, accessory: null },
         hobbies: [],
@@ -759,11 +763,7 @@ class TunatomoApp {
         <div style="position:relative; width: 100px; height: 100px;">
           ${hatHTML}
           ${glassesHTML}
-          <svg viewBox="0 0 100 100" width="100" height="100">
-            <path d="M 20,50 C 35,30 65,30 80,50 C 65,70 35,70 20,50 Z" fill="${user.fishColor || '#0D6EFD'}"/>
-            <path d="M 20,50 L 5,38 L 10,50 L 5,62 Z" fill="${user.fishTailColor || '#0D6EFD'}"/>
-            <circle cx="68" cy="45" r="4" fill="#fff"/><circle cx="70" cy="45" r="2" fill="#000"/>
-          </svg>
+          <img src="${user.activeFishModel || 'images/Tuna3.jpg'}" alt="マイフィッシュ" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 2.5px solid #fff; box-shadow: var(--shadow-md);">
         </div>
       `;
     } else {
@@ -1313,11 +1313,31 @@ class TunatomoApp {
     if (user.equippedItems.glasses) actorEl.classList.add(`equipped-${user.equippedItems.glasses}`);
     if (user.equippedItems.clothing) actorEl.classList.add(`equipped-${user.equippedItems.clothing}`);
 
-    // お魚の色をカスタマイズ（レベルに応じて変化など）
-    const fishBodyColorMap = { 1: "#0D6EFD", 2: "#ea580c", 3: "#8b5cf6" };
-    const levelColor = fishBodyColorMap[user.level] || "#0D6EFD";
-    document.getElementById("fish-body-color").setAttribute("fill", levelColor);
-    document.getElementById("fish-tail-color").setAttribute("fill", levelColor);
+    // お魚のモデル画像の更新
+    const bodyImgEl = document.getElementById("fish-body-img");
+    if (bodyImgEl) {
+      bodyImgEl.src = user.activeFishModel || "images/Tuna3.jpg";
+    }
+
+    // お魚のモデル選択ドロップダウンの状態更新とイベントアタッチ
+    const modelSelectEl = document.getElementById("select-fish-model");
+    if (modelSelectEl) {
+      modelSelectEl.value = user.activeFishModel || "images/Tuna3.jpg";
+      
+      modelSelectEl.onchange = (e) => {
+        user.activeFishModel = e.target.value;
+        
+        // 全体ユーザーリストの更新
+        const index = this.state.users.findIndex(u => u.id === user.id);
+        if (index !== -1) {
+          this.state.users[index] = user;
+        }
+        
+        this.saveState();
+        this.renderGame();
+        this.renderHome();
+      };
+    }
 
     // 1) クローゼット（所持品一覧）描画
     this.renderCloset();

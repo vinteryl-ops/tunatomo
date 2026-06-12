@@ -85,3 +85,6 @@ jspm_packages/
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# Local scratch server
+scratch/
